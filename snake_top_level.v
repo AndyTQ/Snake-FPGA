@@ -161,16 +161,95 @@ module frame_updater(clk, reset_n, frame_update);
 	
 endmodule
 	
-module fsm(resetn, clk, go, inmenu, ingame, plot);
-	input resetn;
-	input clk;
-	input go;
-	output ingame;
-	output inmenu;
-	output plot;
+module fsm(
+	input reset_n,
+	input clk,
+	input esc,
+	input key_up, key_down, key_left, key_right,
+	input num_1, num_2, num_3,
+	input finished_showing_stage,
+	input bad_collision,
+	output inmenu,
+	output ingame,
+	output enable_moving, //for the snake
+	output game_over,
+	output reg [1:0] main_difficulty;
+//	output [3:0] stage
+);
+
+   wire number_touched = num_1 || num_2 || num_3;
+	wire key_touched = key_up || key_down || key_left || key_right; // detection of starting the snake.
 	
-	assign ingame = 0;
-	assign plot = 1;
-	assign inmenu = 1;
+	
+	reg [3:0] current_state, next_state;
+	
+	 
+//	localparam  MENU      	  = 4'd0,
+//	            STAGE_DISPLAY = 4'd1,
+//               GAME_WAIT     = 4'd2,
+//					INGAME        = 4'd3,
+//					GAME_OVER     = 4'd4;
+   localparam MENU = 4'd0,
+	           INGAME = 4'd1;
+
+	always@(*)
+      begin: state_table 
+            case (current_state)
+//              MENU: next_state = number_touched ? STAGE_DISPLAY : MENU;
+//					 STAGE_DISPLAY: next_state = finished_showing_stage ? GAME_WAIT : STAGE_DISPLAY;
+//					 GAME_WAIT: next_state = key_touched ? INGAME : GAME_WAIT;
+//					 INGAME: next_state = bad_collision ? GAME_OVER : INGAME;
+//					 GAME_OVER: next_state = esc ? MENU : GAME_OVER;
+					MENU: next_state = number_touched ? INGAME : MENU;
+					INGAME: next_state = INGAME // 20180723: TO BE CHANGED
+            default: next_state = MENU;
+        endcase
+      end 
+	
+	always@(posedge clk)
+		begin: difficulty register
+			if (current_state = MENU && number_touched)
+				begin
+					if (num1)
+						main_difficulty <= 2'd1;
+					else if (num2)
+					   main_difficulty <= 2'd2;
+					else if (num3)
+					   main_difficulty <= 2'd3;
+				end
+		end
+	
+	
+	always@(posedge clk)
+	if (
+		
+	always@(*)
+      begin: enable_signals
+        // By default make all our signals 0
+	       inmenu = 1'b0;
+	       ingame = 1'b0;
+	       game_over = 1'b0;
+//	       stage = 4'd0;
+			 enable_moving = 1'b0;
+		    
+		  case(current_state)
+		      MENU:begin
+				      inmenu = 1'b1;
+					end
+				INGAME:begin
+				      ingame = 1'b1;
+						game_over = 1'b0;
+						enable_moving = 1'b1;
+					end
+		  endcase
+    end
+	
+	always@(posedge clock)
+      begin: state_FFs
+        if(!reset_n)
+            current_state <= MENU;
+        else
+            current_state <= next_state;
+      end 
 
 endmodule
