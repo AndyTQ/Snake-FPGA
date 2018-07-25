@@ -5,6 +5,7 @@ module snake_top_level
 		// Your inputs and outputs here
       KEY,
       SW,
+		LEDR,
 		  
 		// The ports below are for the VGA output.  Do not change.
 		VGA_CLK,   						//	VGA Clock
@@ -35,6 +36,7 @@ module snake_top_level
 	output	[9:0]	VGA_R;   				//	VGA Red[9:0]
 	output	[9:0]	VGA_G;	 				//	VGA Green[9:0]
 	output	[9:0]	VGA_B;   				//	VGA Blue[9:0]
+	output   [9:0] LEDR;
 	
 	wire resetn;
 	assign resetn = SW[4];
@@ -75,6 +77,7 @@ module snake_top_level
 	 
 	 wire inmenu;
 	 wire ingame;
+	 wire initial_head, allow_moving;
 	 wire [3:0]main_difficulty;
 	 
 	 datapath d0(
@@ -87,7 +90,8 @@ module snake_top_level
 				.y_pointer(y),
 				.main_difficulty(main_difficulty),
 				//delete later
-				.inital_head(SW[2])
+				.initial_head(initial_head),
+				.allow_moving(allow_moving)
 	 );
 	 
 
@@ -97,35 +101,39 @@ module snake_top_level
 				.num_1(~KEY[2]),
 				.num_2(~KEY[1]),
 				.num_3(~KEY[0]),
+				.direction(direction),
 				.inmenu(inmenu),
 				.ingame(ingame),
-				.main_difficulty(main_difficulty)
+				.main_difficulty(main_difficulty),
+				.initial_head(initial_head),
+				.allow_moving(allow_moving),
+				.LEDdebug(LEDR[0])
 	 );
 	 
 	 
 endmodule
 
 
-module datapath(clk, direction, inmenu, ingame, RGB, x_pointer, y_pointer ,inital_head,main_difficulty);
-   input clk;
-	input [3:0] main_difficulty;
-	output [7:0] x_pointer;
-	output [6:0] y_pointer;
-	input [4:0] direction;
+module datapath(
+   input clk,
+	input [3:0] main_difficulty,
+	output [7:0] x_pointer,
+	output [6:0] y_pointer,
+	input [4:0] direction,
 	
-	//delete later
-	input inital_head;
+	input initial_head, allow_moving,
 	
 	//status of game
-   input inmenu;
-	input ingame;
-	
+   input inmenu,
+	input ingame,
+
+	output [2:0] RGB // the colour used for output);
+   );
 	
 	wire R, G, B; // Will be used for concatenation for output "RGB".
 	wire frame_update; // signal for frame update
 	wire delayed_clk;
 	
-	output [2:0] RGB; // the colour used for output
 	
 	wire menu_text; // check if the pixel is the menu's text.
 	
@@ -214,7 +222,7 @@ module datapath(clk, direction, inmenu, ingame, RGB, x_pointer, y_pointer ,inita
 				
 				
 				//Initial Snake's head
-				if(!inital_head) begin
+				if(initial_head) begin
 					snake_Y[0] = 60;
 					snake_X[0] = 80;
 				end
@@ -260,14 +268,16 @@ module datapath(clk, direction, inmenu, ingame, RGB, x_pointer, y_pointer ,inita
 											right = 1;
 									end 
 					endcase	
-					if(up)
-						 snake_Y[0] <= (snake_Y[0] - 2);
-					else if(left)
-						 snake_X[0] <= (snake_X[0] - 2);
-					else if(down)
-						 snake_Y[0] <= (snake_Y[0] + 2);
-					else if(right)
-						 snake_X[0] <= (snake_X[0] + 2);
+					if (allow_moving) begin
+						if(up)
+							 snake_Y[0] <= (snake_Y[0] - 2);
+						else if(left)
+							 snake_X[0] <= (snake_X[0] - 2);
+						else if(down)
+							 snake_Y[0] <= (snake_Y[0] + 2);
+						else if(right)
+							 snake_X[0] <= (snake_X[0] + 2);
+					end
 				end	
 				
 				
@@ -360,9 +370,10 @@ endmodule
 
 
 
-module kbInput(PS2_CLK,direction,data,reset_n);
+module kbInput(PS2_CLK,direction,data,reset_n, number);
 	input PS2_CLK, data;
 	output reg [4:0] direction;
+	output reg [4:0] number;
 	output reg reset_n = 0; 
 	reg [7:0] code;
 	reg [10:0]keyCode, previousCode;
@@ -397,7 +408,20 @@ module kbInput(PS2_CLK,direction,data,reset_n);
 //		else if(code == 8'h5A)
 //			reset <= ~reset;
 		else direction <= direction;
+	end
+	
+	always@(code)
+	begin
+		if(code == 8'h16)
+			number = 5'b00010;
+		else if(code == 8'h1E)
+			number = 5'b00100;
+		else if(code == 8'h26)
+			number = 5'b01000;
+		else number <= number;
 	end	
+	
+	
 endmodule
 
 
@@ -483,20 +507,28 @@ endmodule
 module Controller(
 //	input reset_n,
 	input clk,
+	output LEDdebug,
 //	input esc,
 //	input key_up, key_down, key_left, key_right,
 	input num_1, num_2, num_3,
+	input [4:0] direction,
 //	input finished_showing_stage,
 //	input bad_collision,
 	output reg inmenu,
 	output reg ingame,
+	output reg initial_head,
+	output reg allow_moving,
 //	output enable_moving, //for the snake
 //	output game_over,
 	output reg [3:0] main_difficulty
 //	output [3:0] stage
 );
+   assign LEDdebug = allow_moving;
    wire number_touched = num_1 || num_2 || num_3;
-//	wire key_touched = key_up || key_down || key_left || key_right; // detection of starting the snake.
+   wire direction_touched = (direction == 5'b00010
+									||direction == 5'b00100
+								   ||direction == 5'b01000
+								   ||direction == 5'b10000) ; // detection of starting the snake.
 	
 	
 	reg [3:0] current_state, next_state;
@@ -509,53 +541,54 @@ module Controller(
 //					GAME_OVER     = 4'd4;
    localparam INIT = 4'd0,
 	           MENU = 4'd1,
-				  INGAME = 4'd2;
+				  GAME_WAIT = 4'd2,
+				  INGAME = 4'd3;
 
 	always@(*)
       begin: state_table 
             case (current_state)
-//              MENU: next_state = number_touched ? STAGE_DISPLAY : MENU;
-//					 STAGE_DISPLAY: next_state = finished_showing_stage ? GAME_WAIT : STAGE_DISPLAY;
-//					 GAME_WAIT: next_state = key_touched ? INGAME : GAME_WAIT;
-//					 INGAME: next_state = bad_collision ? GAME_OVER : INGAME;
-//					 GAME_OVER: next_state = esc ? MENU : GAME_OVER;
 					INIT: next_state = MENU;
-					MENU: next_state = (number_touched) ? INGAME : MENU;
+					MENU: next_state = (number_touched) ? GAME_WAIT : MENU;
+					GAME_WAIT: next_state = (direction_touched) ? INGAME : GAME_WAIT;
 					INGAME: next_state = INGAME; // 20180723: TO BE CHANGED
             default: next_state = INIT;
         endcase
       end 
 	
-	always@(posedge ((current_state == MENU) && number_touched))begin
+	always@(posedge clk)begin
 //					case(selected_difficulty)
 //						3'b001: main_difficulty <= 2'd10;
 //						3'b010: main_difficulty <= 2'd3;
 //						3'b100: main_difficulty <= 2'd1;
 //						default: main_difficulty <= 2'd1;
 //					endcase
-			if (num_1)
-				main_difficulty <= 4'd4;
-			else if (num_2)
-			   main_difficulty <= 4'd2;
-			else
-			   main_difficulty <= 4'd1;
+		if (current_state == MENU) begin
+				if (num_1)
+					main_difficulty <= 4'd4;
+				else if (num_2)
+					main_difficulty <= 4'd2;
+				else
+					main_difficulty <= 4'd1;
+		end
 	end
 		
 	always@(*) begin //enable_signals
         // By default make all our signals 0
 	       inmenu = 1'b0;
 	       ingame = 1'b0;
-//	       game_over = 1'b0;
-//			 enable_moving = 1'b0;
-		 
+			 allow_moving = 1'b0;
+			 initial_head = 1'b0;
 		  case(current_state)
 		      MENU:begin
 				      inmenu = 1'b1;
 					end
+				GAME_WAIT:begin
+				      ingame = 1'b1;
+					   initial_head = 1'b1;
+				end
 				INGAME:begin
 				      ingame = 1'b1;
-//						game_over = 1'b0;
-//						enable_moving = 1'b1;
+						allow_moving = 1'b1;
 					end
 		  endcase
      end
