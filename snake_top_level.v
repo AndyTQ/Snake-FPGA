@@ -72,8 +72,9 @@ module snake_top_level
 		defparam VGA.BACKGROUND_IMAGE = "black.mif";
 	 //direction wire
 	 wire [4:0] direction;
+	 wire [4:0] number;
 //	 kbInput kbIn(CLOCK_50, KEY, SW, direction, reset);
-	 kbInput kbIn(PS2_CLK,direction,PS2_DAT,reset_n);
+	 kbInput kbIn(PS2_CLK,direction,PS2_DAT,reset_n, number);
 	 
 	 wire inmenu;
 	 wire ingame;
@@ -98,9 +99,7 @@ module snake_top_level
 	 
 	 Controller c0(
 				.clk(CLOCK_50),
-				.num_1(~KEY[2]),
-				.num_2(~KEY[1]),
-				.num_3(~KEY[0]),
+				.number_input(number),
 				.direction(direction),
 				.inmenu(inmenu),
 				.ingame(ingame),
@@ -510,8 +509,8 @@ module Controller(
 	output LEDdebug,
 //	input esc,
 //	input key_up, key_down, key_left, key_right,
-	input num_1, num_2, num_3,
 	input [4:0] direction,
+	input [4:0] number_input,
 //	input finished_showing_stage,
 //	input bad_collision,
 	output reg inmenu,
@@ -524,7 +523,9 @@ module Controller(
 //	output [3:0] stage
 );
    assign LEDdebug = allow_moving;
-   wire number_touched = num_1 || num_2 || num_3;
+   wire number_touched = (number_input == 5'b00010
+									||number_input == 5'b00100
+								   ||number_input == 5'b01000);
    wire direction_touched = (direction == 5'b00010
 									||direction == 5'b00100
 								   ||direction == 5'b01000
@@ -563,9 +564,9 @@ module Controller(
 //						default: main_difficulty <= 2'd1;
 //					endcase
 		if (current_state == MENU) begin
-				if (num_1)
+				if (number_input == 5'b00010)
 					main_difficulty <= 4'd4;
-				else if (num_2)
+				else if (number_input == 5'b00100)
 					main_difficulty <= 4'd2;
 				else
 					main_difficulty <= 4'd1;
