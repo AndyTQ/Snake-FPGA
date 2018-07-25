@@ -75,7 +75,7 @@ module snake_top_level
 	 
 	 wire inmenu;
 	 wire ingame;
-	 wire [1:0]main_difficulty;
+	 wire [3:0]main_difficulty;
 	 
 	 datapath d0(
 	         .clk(CLOCK_50),
@@ -94,9 +94,9 @@ module snake_top_level
 	 
 	 Controller c0(
 				.clk(CLOCK_50),
-				.num_1(~KEY[0]),
+				.num_1(~KEY[2]),
 				.num_2(~KEY[1]),
-				.num_3(~KEY[2]),
+				.num_3(~KEY[0]),
 				.inmenu(inmenu),
 				.ingame(ingame),
 				.main_difficulty(main_difficulty)
@@ -108,7 +108,7 @@ endmodule
 
 module datapath(clk, direction, inmenu, ingame, RGB, x_pointer, y_pointer ,inital_head,main_difficulty);
    input clk;
-	input [1:0] main_difficulty;
+	input [3:0] main_difficulty;
 	output [7:0] x_pointer;
 	output [6:0] y_pointer;
 	input [4:0] direction;
@@ -495,7 +495,6 @@ module Controller(
 	output reg [3:0] main_difficulty
 //	output [3:0] stage
 );
-   wire selected_difficulty = {num_3, num_2, num_1};
    wire number_touched = num_1 || num_2 || num_3;
 //	wire key_touched = key_up || key_down || key_left || key_right; // detection of starting the snake.
 	
@@ -535,9 +534,9 @@ module Controller(
 //						default: main_difficulty <= 2'd1;
 //					endcase
 			if (num_1)
-				main_difficulty <= 4'd10;
+				main_difficulty <= 4'd4;
 			else if (num_2)
-			   main_difficulty <= 4'd3;
+			   main_difficulty <= 4'd2;
 			else
 			   main_difficulty <= 4'd1;
 	end
