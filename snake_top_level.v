@@ -1,26 +1,32 @@
 module snake_top_level
 	(
 		CLOCK_50,						//	On Board 50 MHz
+		
 		// Your inputs and outputs here
-        KEY,
-        SW,
+      KEY,
+      SW,
+		  
 		// The ports below are for the VGA output.  Do not change.
 		VGA_CLK,   						//	VGA Clock
 		VGA_HS,							//	VGA H_SYNC
 		VGA_VS,							//	VGA V_SYNC
-		VGA_BLANK_N,						//	VGA BLANK
+		VGA_BLANK_N,					//	VGA BLANK
 		VGA_SYNC_N,						//	VGA SYNC
 		VGA_R,   						//	VGA Red[9:0]
 		VGA_G,	 						//	VGA Green[9:0]
-		VGA_B   						//	VGA Blue[9:0]
-	);
+		VGA_B,							//	VGA Blue[9:0]
+		PS2_DAT, 						// KEYboard input
+		PS2_CLK							// KEYboard clock
+		);
 
 	input	  CLOCK_50;				//	50 MHz
 	input   [9:0]   SW;
 	input   [3:0]   KEY;
-
+	
+	input   PS2_DAT;
+	input   PS2_CLK;
 	// Declare your inputs and outputs here
-	// Do not change the following outputs
+	// Do not change the follo wing outputs
 	output			VGA_CLK;   				//	VGA Clock
 	output			VGA_HS;					//	VGA H_SYNC
 	output			VGA_VS;					//	VGA V_SYNC
@@ -31,7 +37,7 @@ module snake_top_level
 	output	[9:0]	VGA_B;   				//	VGA Blue[9:0]
 	
 	wire resetn;
-	assign resetn = KEY[0];
+	assign resetn = SW[4];
 	
 	// Create the colour, x, y and writeEn wires that are inputs to the controller.
 	wire [2:0] colour;
@@ -62,52 +68,339 @@ module snake_top_level
 		defparam VGA.MONOCHROME = "FALSE";
 		defparam VGA.BITS_PER_COLOUR_CHANNEL = 1;
 		defparam VGA.BACKGROUND_IMAGE = "black.mif";
-		
-	datapath d0(
+	 //direction wire
+	 wire [4:0] direction;
+//	 kbInput kbIn(CLOCK_50, KEY, SW, direction, reset);
+	 kbInput kbIn(PS2_CLK,direction,PS2_DAT,reset_n);
+	 
+	 wire inmenu;
+	 wire ingame;
+	 wire [1:0]main_difficulty;
+	 
+	 datapath d0(
 	         .clk(CLOCK_50),
-	         .direction(5'd0),
-				.inmenu(1'd1),
-				.ingame(1'd0),
+	         .direction(direction),
+				.inmenu(inmenu),
+				.ingame(ingame),
 		      .RGB(colour),
 				.x_pointer(x),
-				.y_pointer(y)
-	            );
+				.y_pointer(y),
+				.main_difficulty(main_difficulty),
+				//delete later
+				.inital_head(SW[2])
+	 );
+	 
+
+	 
+	 Controller c0(
+				.clk(CLOCK_50),
+				.num_1(~KEY[0]),
+				.num_2(~KEY[1]),
+				.num_3(~KEY[2]),
+				.inmenu(inmenu),
+				.ingame(ingame),
+				.main_difficulty(main_difficulty)
+	 );
+	 
+	 
 endmodule
 
 
-module datapath(clk, direction, inmenu, ingame, RGB, x_pointer, y_pointer);
+module datapath(clk, direction, inmenu, ingame, RGB, x_pointer, y_pointer ,inital_head,main_difficulty);
    input clk;
+	input [1:0] main_difficulty;
 	output [7:0] x_pointer;
 	output [6:0] y_pointer;
 	input [4:0] direction;
-	//coordinates of snake
-	reg [7:0] snake_x [0:127];
-	reg [6:0] snake_y [0:127];
+	
+	//delete later
+	input inital_head;
+	
 	//status of game
    input inmenu;
 	input ingame;
 	
+	
 	wire R, G, B; // Will be used for concatenation for output "RGB".
 	wire frame_update; // signal for frame update
+	wire delayed_clk;
+	
 	output [2:0] RGB; // the colour used for output
 	
+	wire menu_text; // check if the pixel is the menu's text.
+	
+	
+	
+	//register for border
+	reg border;
+	
+	//registers for snake
+	reg [6:0] size;
+	reg [7:0] snake_X[0:127];
+	reg [6:0] snake_Y[0:127];
+	reg found;
+	reg snakeHead;
+	reg snakeBody;
+	reg [1:0]currentDirect;
+	integer bodycounter, bodycounter2, bodycounter3;
+	reg up,down,left,right;
+	
+	//registers for apple
+	reg apple;
+	reg [7:0] appleX;
+	reg [6:0] appleY;
+	reg apple_inX, apple_inY;
+	wire [7:0]rand_X;
+	wire [6:0]rand_Y;
+	
+	//registers for game status
+	reg lethal, nonLethal;
+	reg bad_collision, good_collision, game_over;
+	
+	
+	
+	//down level modules
 	refresher ref0(clk, x_pointer, y_pointer);
 	frame_updater upd0(clk, 1'b1, frame_update);
-	menu_text_setter menu0(clk, inmenu, x_pointer, y_pointer, menu_text);// check if the pixel is the menu's text.
+	delay_counter dc0(clk, 1'b1, frame_update,delayed_clk,main_difficulty);
+	random rand1(clk, rand_X, rand_Y);
+	menu_text_setter menu0(clk, inmenu, x_pointer, y_pointer, menu_text);
+	// check if the pixel is the menu's text.
+	
+	
+	always@(posedge clk)
+	begin
+		if (inmenu)begin
+			 //initialize snake's position
+			 for(bodycounter3 = 1; bodycounter3 <=127; bodycounter3 = bodycounter3+1)begin
+					snake_X[bodycounter3] = 0;
+					snake_Y[bodycounter3] = 0;
+			 end
+				
+			 //initialze snake's size
+			 size = 1;	
+			 
+			 //start game
+			 game_over=0;
+		
+			 //initialize apple's position
+			 appleX = 15;
+			 appleY = 15;
+		end
+		else if(ingame)begin
+				//################################################################################################
+				//Add border
+				border <= (   ((x_pointer >= 2) && (x_pointer <= 4)&&(y_pointer >= 2) && (y_pointer <=112))
+								||((x_pointer >= 156)&& (x_pointer <= 158)&&(y_pointer >= 2) && (y_pointer <=112))
+								||((x_pointer >= 2) && (x_pointer <= 158)&&(y_pointer >= 2) && (y_pointer <= 4))
+								||((x_pointer >= 2) && (x_pointer <= 158)&&(y_pointer >= 110) && (y_pointer <= 112)));
+				
+				
+				//################################################################################################
+				//SNAKE PART STARTS FROM HERE!
+				//Add Snake body
+				found = 0;
+				for(bodycounter = 1; bodycounter <= size; bodycounter = bodycounter + 1)begin
+					if(~found)begin				
+						snakeBody = ( (x_pointer >= snake_X[bodycounter] && x_pointer <= snake_X[bodycounter]+2) 
+								  && (y_pointer >= snake_Y[bodycounter] && y_pointer <= snake_Y[bodycounter]+2));
+						found = snakeBody;
+					end
+				end
+				
+				//Add Snake head
+				snakeHead = (x_pointer >= snake_X[0] && x_pointer <= (snake_X[0]+2))
+								&& (y_pointer >= snake_Y[0] && y_pointer <= (snake_Y[0]+2));
+				
+				
+				//Initial Snake's head
+				if(!inital_head) begin
+					snake_Y[0] = 60;
+					snake_X[0] = 80;
+				end
+				
+				
+				//update snake's position
+				if(delayed_clk)begin
+					for(bodycounter2 = 127; bodycounter2 > 0; bodycounter2 = bodycounter2 - 1)begin
+							if(bodycounter2 <= size - 1)begin
+								snake_X[bodycounter2] = snake_X[bodycounter2 - 1];
+								snake_Y[bodycounter2] = snake_Y[bodycounter2 - 1];
+							end	
+					end	
+						
+					//update snake's direction
+					case(direction)
+						//UP
+						5'b00010: if(!down)begin
+											up = 1;
+											down = 0;
+											left = 0;
+											right = 0;
+									 end 
+						//LEFT
+						5'b00100:if(!right)begin
+											up = 0;
+											down = 0;
+											left = 1;
+											right = 0;
+									 end 
+						//DOWN
+						5'b01000:if(!up)begin
+											up = 0;
+											down = 1;
+											left = 0;
+											right = 0;
+									end 
+						//RIGHT
+						5'b10000: if(!left)begin
+											up = 0;
+											down = 0;
+											left = 0;
+											right = 1;
+									end 
+					endcase	
+					if(up)
+						 snake_Y[0] <= (snake_Y[0] - 2);
+					else if(left)
+						 snake_X[0] <= (snake_X[0] - 2);
+					else if(down)
+						 snake_Y[0] <= (snake_Y[0] + 2);
+					else if(right)
+						 snake_X[0] <= (snake_X[0] + 2);
+				end	
+				
+				
+				//################################################################################################
+				//APPLE PART STARTS FROM HERE! 
+				//Draw an apple
+				apple_inX <= (x_pointer >= appleX && x_pointer <= (appleX + 2));
+				apple_inY <= (y_pointer >= appleY && y_pointer <= (appleY + 2));
+				apple = apple_inX && apple_inY;
+				
+				//Set apple's position
+				if(good_collision)begin
+						appleX <= rand_X;
+						appleY <= rand_Y;
+				end
+				
+				//###############################################################################################
+				//CHECK COLLISION
+				//if is in lethal position
+				lethal = border || snakeBody;
+	
+				//if is in nonLethal position
+				nonLethal = apple;
+	
+				//check good collision
+				if(nonLethal && snakeHead) begin 
+					good_collision<=1;
+					size = size+1;
+				end	
+				else 
+					good_collision<=0;
+			
+				//check bad collision
+				if(lethal && snakeHead) begin
+					bad_collision<=1;
+				end
+				else begin 
+					bad_collision<=0;
+				end
+	
+				//check game over
+				if(bad_collision) begin
+					game_over<=1;
+				end	
+				
+				
+		end
+	end
 	
 	// Display white: menu_text
 	// Display green: the snake's head and the snake's body
 	// Display red: the apple, or game over
 	// Display blue: the border
+		assign R = ((ingame && apple) || (inmenu && menu_text));
+		assign G = ((ingame && snakeHead)||(ingame && snakeBody)) || (inmenu && menu_text);
+		assign B = (ingame && border) || (inmenu && menu_text);
+		assign RGB = {R, G, B};
+endmodule
 	
-	assign R = menu_text;  // add more stuff use || and && here!
-	assign G = menu_text;  // same as above
-	assign B = menu_text;  
-   assign RGB = {R, G, B};
+	
+module random(clk, rand_X, rand_Y);
+	input clk;
+	output reg [7:0] rand_X =6;
+	output reg [6:0] rand_Y =6;
+	
+	// set the maximum height and width of the game interface.
+	// x and y will scan over every pixel.
+	integer max_height = 108;
+	integer max_width = 154;
+	
+	always@(posedge clk)
+	begin
+		if(rand_X === max_width)
+			rand_X <= 6;
+		else
+			rand_X <= rand_X + 1;
+	end
+
+	always@(posedge clk)
+	begin
+		if(rand_X === max_width)
+		begin
+			if(rand_Y === max_height)
+				rand_Y <= 6;
+			else
+				rand_Y <= rand_Y + 1;
+		end
+	end
+endmodule	
+
+
+
+module kbInput(PS2_CLK,direction,data,reset_n);
+	input PS2_CLK, data;
+	output reg [4:0] direction;
+	output reg reset_n = 0; 
+	reg [7:0] code;
+	reg [10:0]keyCode, previousCode;
+	reg recordNext = 0;
+	integer count = 0;
+
+	always@(posedge PS2_CLK)
+	begin
+		keyCode[count] = data;
+		count = count + 1;			
+		if(count == 11)
+		begin
+			if(previousCode == 8'hF0)
+			begin
+				code <= keyCode[8:1];
+			end
+			previousCode = keyCode[8:1];
+			count = 0;
+		end
+	end
+	
+	always@(code)
+	begin
+		if(code == 8'h75)
+			direction = 5'b00010;
+		else if(code == 8'h6B)
+			direction = 5'b00100;
+		else if(code == 8'h72)
+			direction = 5'b01000;
+		else if(code == 8'h74)
+			direction = 5'b10000;
+//		else if(code == 8'h5A)
+//			reset <= ~reset;
+		else direction <= direction;
+	end	
 endmodule
 
 
-	
 module refresher(clk, x_counter, y_counter);
 // refreshes the coordinate of x and y to the next check point.
 	input clk;
@@ -144,7 +437,8 @@ module frame_updater(clk, reset_n, frame_update);
 	input reset_n;
 	output frame_update;
 	reg[19:0] delay;
-		// Register for the delay counter
+	// Register for the delay counter
+	
 	always @(posedge clk)
 	begin: delay_counter
 //		if (!reset_n)
@@ -158,27 +452,52 @@ module frame_updater(clk, reset_n, frame_update);
 	end
 	
 	assign frame_update = (delay == 20'd0)? 1: 0;
-	
 endmodule
+
+
+
+module delay_counter(clk, reset_n, en_delay,delayed_clk,main_difficulty);
+	input clk;
+	input reset_n;
+	input en_delay;
+	input [3:0]main_difficulty;
+	output delayed_clk;
 	
-module fsm(
-	input reset_n,
+	reg[3:0] delay;
+	
+	// Register for the delay counter
+	always @(posedge clk)begin
+//		if (!reset_n)
+//			delay <= 20'd840000;
+		if(delay == main_difficulty)
+				delay <= 0;
+		else if (en_delay)begin
+			   delay <= delay + 1'b1;
+		end	
+	end
+	
+	assign delayed_clk = (delay == main_difficulty)? 1: 0;
+endmodule
+
+	
+module Controller(
+//	input reset_n,
 	input clk,
-	input esc,
-	input key_up, key_down, key_left, key_right,
+//	input esc,
+//	input key_up, key_down, key_left, key_right,
 	input num_1, num_2, num_3,
-	input finished_showing_stage,
-	input bad_collision,
-	output inmenu,
-	output ingame,
-	output enable_moving, //for the snake
-	output game_over,
-	output reg [1:0] main_difficulty;
+//	input finished_showing_stage,
+//	input bad_collision,
+	output reg inmenu,
+	output reg ingame,
+//	output enable_moving, //for the snake
+//	output game_over,
+	output reg [3:0] main_difficulty
 //	output [3:0] stage
 );
-
+   wire selected_difficulty = {num_3, num_2, num_1};
    wire number_touched = num_1 || num_2 || num_3;
-	wire key_touched = key_up || key_down || key_left || key_right; // detection of starting the snake.
+//	wire key_touched = key_up || key_down || key_left || key_right; // detection of starting the snake.
 	
 	
 	reg [3:0] current_state, next_state;
@@ -189,8 +508,9 @@ module fsm(
 //               GAME_WAIT     = 4'd2,
 //					INGAME        = 4'd3,
 //					GAME_OVER     = 4'd4;
-   localparam MENU = 4'd0,
-	           INGAME = 4'd1;
+   localparam INIT = 4'd0,
+	           MENU = 4'd1,
+				  INGAME = 4'd2;
 
 	always@(*)
       begin: state_table 
@@ -200,56 +520,52 @@ module fsm(
 //					 GAME_WAIT: next_state = key_touched ? INGAME : GAME_WAIT;
 //					 INGAME: next_state = bad_collision ? GAME_OVER : INGAME;
 //					 GAME_OVER: next_state = esc ? MENU : GAME_OVER;
-					MENU: next_state = number_touched ? INGAME : MENU;
-					INGAME: next_state = INGAME // 20180723: TO BE CHANGED
-            default: next_state = MENU;
+					INIT: next_state = MENU;
+					MENU: next_state = (number_touched) ? INGAME : MENU;
+					INGAME: next_state = INGAME; // 20180723: TO BE CHANGED
+            default: next_state = INIT;
         endcase
       end 
 	
-	always@(posedge clk)
-		begin: difficulty register
-			if (current_state = MENU && number_touched)
-				begin
-					if (num1)
-						main_difficulty <= 2'd1;
-					else if (num2)
-					   main_difficulty <= 2'd2;
-					else if (num3)
-					   main_difficulty <= 2'd3;
-				end
-		end
-	
-	
-	always@(posedge clk)
-	if (
+	always@(posedge ((current_state == MENU) && number_touched))begin
+//					case(selected_difficulty)
+//						3'b001: main_difficulty <= 2'd10;
+//						3'b010: main_difficulty <= 2'd3;
+//						3'b100: main_difficulty <= 2'd1;
+//						default: main_difficulty <= 2'd1;
+//					endcase
+			if (num_1)
+				main_difficulty <= 4'd10;
+			else if (num_2)
+			   main_difficulty <= 4'd3;
+			else
+			   main_difficulty <= 4'd1;
+	end
 		
-	always@(*)
-      begin: enable_signals
+	always@(*) begin //enable_signals
         // By default make all our signals 0
 	       inmenu = 1'b0;
 	       ingame = 1'b0;
-	       game_over = 1'b0;
-//	       stage = 4'd0;
-			 enable_moving = 1'b0;
-		    
+//	       game_over = 1'b0;
+//			 enable_moving = 1'b0;
+		 
 		  case(current_state)
 		      MENU:begin
 				      inmenu = 1'b1;
 					end
 				INGAME:begin
 				      ingame = 1'b1;
-						game_over = 1'b0;
-						enable_moving = 1'b1;
+//						game_over = 1'b0;
+//						enable_moving = 1'b1;
 					end
 		  endcase
-    end
+     end
 	
-	always@(posedge clock)
-      begin: state_FFs
-        if(!reset_n)
-            current_state <= MENU;
-        else
+	always@(posedge clk)
+      begin
+//        if(!reset_n)
+//            current_state <= MENU;
+//        else
             current_state <= next_state;
       end 
-
 endmodule
