@@ -137,7 +137,7 @@ module datapath(
 	wire menu_text; // check if the pixel is the menu's text.
 	
 	//register for score
-	reg [1024:0] score;
+	reg [12:0] score;
 	
 	
 	//register for border
@@ -174,7 +174,7 @@ module datapath(
 	delay_counter dc0(clk, 1'b1, frame_update,delayed_clk,main_difficulty);
 	random rand1(clk, rand_X, rand_Y);
 	menu_text_setter menu0(clk, inmenu, x_pointer, y_pointer, menu_text);
-	game_text_setter gametxt0(clk, ingame, main_difficulty, x_pointer, y_pointer, game_text);
+	game_text_setter gametxt0(clk, score, ingame, main_difficulty, x_pointer, y_pointer, game_text);
 	// check if the pixel is the menu's text.
 	
 	
