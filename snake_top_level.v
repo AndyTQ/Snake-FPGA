@@ -135,6 +135,7 @@ module datapath(
 	
 	
 	wire menu_text; // check if the pixel is the menu's text.
+	wire game_text;
 	
 	//register for score
 	reg [12:0] score;

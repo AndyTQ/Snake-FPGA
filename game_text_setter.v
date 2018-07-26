@@ -6,7 +6,6 @@ module game_text_setter(clk, score, ingame, main_difficulty, x_pointer, y_pointe
 	input [6:0]y_pointer;
 	input [12:0] score;
 	output reg game_text; // check if the pixel is the menu's text.
-	
 
 	
 	reg [3:0] units_digit_score;
@@ -30,7 +29,17 @@ module game_text_setter(clk, score, ingame, main_difficulty, x_pointer, y_pointe
 			     ||easy
 				  ||normal
 				  ||hard
-				  ||units_digit_0
+				  ||digits
+				  ||tens
+				  ||hundreds
+				  )
+				 game_text <= 1'b1;
+			 else
+				 game_text <= 1'b0;
+			 end
+	end
+	
+	wire digits = (units_digit_0
 				  ||units_digit_1
 				  ||units_digit_2
 				  ||units_digit_3
@@ -39,15 +48,20 @@ module game_text_setter(clk, score, ingame, main_difficulty, x_pointer, y_pointe
 				  ||units_digit_6
 				  ||units_digit_7
 				  ||units_digit_8
-				  ||units_digit_9
-				  )
-				 game_text <= 1'b1;
-			 else
-				 game_text <= 1'b0;
-			 end
-	end
+				  ||units_digit_9);
 	
+	wire tens = (tens_digit_0
+				  ||tens_digit_1
+				  ||tens_digit_2
+				  ||tens_digit_3
+				  ||tens_digit_4
+				  ||tens_digit_5
+				  ||tens_digit_6
+				  ||tens_digit_7
+				  ||tens_digit_8
+				  ||tens_digit_9);
 	
+	wire hundreds = 0;
 	
 	
 	// wires for main texts
@@ -563,4 +577,259 @@ module game_text_setter(clk, score, ingame, main_difficulty, x_pointer, y_pointe
 ||(x_pointer == 43 && y_pointer == 118)
 ||(x_pointer == 44 && y_pointer == 118)
 ||(x_pointer == 45 && y_pointer == 118));
+   wire tens_digit_0 = tens_digit_score == 0 && ((x_pointer == 42 - 5 && y_pointer == 114)
+||(x_pointer == 43 - 5 && y_pointer == 114)
+||(x_pointer == 44 - 5 && y_pointer == 114)
+||(x_pointer == 45 - 5 && y_pointer == 114)
+||(x_pointer == 42 - 5 && y_pointer == 115)
+||(x_pointer == 45 - 5 && y_pointer == 115)
+||(x_pointer == 42 - 5 && y_pointer == 116)
+||(x_pointer == 45 - 5 && y_pointer == 116)
+||(x_pointer == 42 - 5 && y_pointer == 117)
+||(x_pointer == 45 - 5 && y_pointer == 117)
+||(x_pointer == 42 - 5 && y_pointer == 118)
+||(x_pointer == 43 - 5 && y_pointer == 118)
+||(x_pointer == 44 - 5 && y_pointer == 118)
+||(x_pointer == 45 - 5 && y_pointer == 118));
+	wire tens_digit_1 = tens_digit_score == 1 && ((x_pointer == 45 - 5 && y_pointer == 114)
+||(x_pointer == 45 - 5 && y_pointer == 115)
+||(x_pointer == 45 - 5 && y_pointer == 116)
+||(x_pointer == 45 - 5 && y_pointer == 117)
+||(x_pointer == 45 - 5 && y_pointer == 118));
+   wire tens_digit_2 = tens_digit_score == 2 && ((x_pointer == 42 - 5 && y_pointer == 114)
+||(x_pointer == 43 - 5 && y_pointer == 114)
+||(x_pointer == 44 - 5 && y_pointer == 114)
+||(x_pointer == 45 - 5 && y_pointer == 114)
+||(x_pointer == 45 - 5 && y_pointer == 115)
+||(x_pointer == 42 - 5 && y_pointer == 116)
+||(x_pointer == 43 - 5 && y_pointer == 116)
+||(x_pointer == 44 - 5 && y_pointer == 116)
+||(x_pointer == 45 - 5 && y_pointer == 116)
+||(x_pointer == 42 - 5 && y_pointer == 117)
+||(x_pointer == 42 - 5 && y_pointer == 118)
+||(x_pointer == 43 - 5 && y_pointer == 118)
+||(x_pointer == 44 - 5 && y_pointer == 118)
+||(x_pointer == 45 - 5 && y_pointer == 118));
+	wire tens_digit_3 = tens_digit_score == 3 && ((x_pointer == 42 - 5 && y_pointer == 114)
+||(x_pointer == 43 - 5 && y_pointer == 114)
+||(x_pointer == 44 - 5 && y_pointer == 114)
+||(x_pointer == 45 - 5 && y_pointer == 114)
+||(x_pointer == 45 - 5 && y_pointer == 115)
+||(x_pointer == 42 - 5 && y_pointer == 116)
+||(x_pointer == 43 - 5 && y_pointer == 116)
+||(x_pointer == 44 - 5 && y_pointer == 116)
+||(x_pointer == 45 - 5 && y_pointer == 116)
+||(x_pointer == 45 - 5 && y_pointer == 117)
+||(x_pointer == 42 - 5 && y_pointer == 118)
+||(x_pointer == 43 - 5 && y_pointer == 118)
+||(x_pointer == 44 - 5 && y_pointer == 118)
+||(x_pointer == 45 - 5 && y_pointer == 118));
+	wire tens_digit_4 = tens_digit_score == 4 && ((x_pointer == 42 - 5 && y_pointer == 114)
+||(x_pointer == 45 - 5 && y_pointer == 114)
+||(x_pointer == 42 - 5 && y_pointer == 115)
+||(x_pointer == 45 - 5 && y_pointer == 115)
+||(x_pointer == 42 - 5 && y_pointer == 116)
+||(x_pointer == 43 - 5 && y_pointer == 116)
+||(x_pointer == 44 - 5 && y_pointer == 116)
+||(x_pointer == 45 - 5 && y_pointer == 116)
+||(x_pointer == 45 - 5 && y_pointer == 117)
+||(x_pointer == 45 - 5 && y_pointer == 118));
+	wire tens_digit_5 = tens_digit_score == 5 && ((x_pointer == 42 - 5 && y_pointer == 114)
+||(x_pointer == 43 - 5 && y_pointer == 114)
+||(x_pointer == 44 - 5 && y_pointer == 114)
+||(x_pointer == 45 - 5 && y_pointer == 114)
+||(x_pointer == 42 - 5 && y_pointer == 115)
+||(x_pointer == 42 - 5 && y_pointer == 116)
+||(x_pointer == 43 - 5 && y_pointer == 116)
+||(x_pointer == 44 - 5 && y_pointer == 116)
+||(x_pointer == 45 - 5 && y_pointer == 116)
+||(x_pointer == 45 - 5 && y_pointer == 117)
+||(x_pointer == 42 - 5 && y_pointer == 118)
+||(x_pointer == 43 - 5 && y_pointer == 118)
+||(x_pointer == 44 - 5 && y_pointer == 118)
+||(x_pointer == 45 - 5 && y_pointer == 118));
+	wire tens_digit_6 = tens_digit_score == 6 && ((x_pointer == 42 - 5 && y_pointer == 114)
+||(x_pointer == 43 - 5 && y_pointer == 114)
+||(x_pointer == 44 - 5 && y_pointer == 114)
+||(x_pointer == 45 - 5 && y_pointer == 114)
+||(x_pointer == 42 - 5 && y_pointer == 115)
+||(x_pointer == 42 - 5 && y_pointer == 116)
+||(x_pointer == 43 - 5 && y_pointer == 116)
+||(x_pointer == 44 - 5 && y_pointer == 116)
+||(x_pointer == 45 - 5 && y_pointer == 116)
+||(x_pointer == 42 - 5 && y_pointer == 117)
+||(x_pointer == 45 - 5 && y_pointer == 117)
+||(x_pointer == 42 - 5 && y_pointer == 118)
+||(x_pointer == 43 - 5 && y_pointer == 118)
+||(x_pointer == 44 - 5 && y_pointer == 118)
+||(x_pointer == 45 - 5 && y_pointer == 118));
+	wire tens_digit_7 = tens_digit_score == 7 && ((x_pointer == 42 - 5 && y_pointer == 114)
+||(x_pointer == 43 - 5 && y_pointer == 114)
+||(x_pointer == 44 - 5 && y_pointer == 114)
+||(x_pointer == 45 - 5 && y_pointer == 114)
+||(x_pointer == 45 - 5 && y_pointer == 115)
+||(x_pointer == 45 - 5 && y_pointer == 116)
+||(x_pointer == 45 - 5 && y_pointer == 117)
+||(x_pointer == 45 - 5 && y_pointer == 118));
+	wire tens_digit_8 = tens_digit_score == 8 && (
+	(x_pointer == 42 - 5 && y_pointer == 114)
+||(x_pointer == 43 - 5 && y_pointer == 114)
+||(x_pointer == 44 - 5 && y_pointer == 114)
+||(x_pointer == 45 - 5 && y_pointer == 114)
+||(x_pointer == 42 - 5 && y_pointer == 115)
+||(x_pointer == 45 - 5 && y_pointer == 115)
+||(x_pointer == 42 - 5 && y_pointer == 116)
+||(x_pointer == 43 - 5 && y_pointer == 116)
+||(x_pointer == 44 - 5 && y_pointer == 116)
+||(x_pointer == 45 - 5 && y_pointer == 116)
+||(x_pointer == 42 - 5 && y_pointer == 117)
+||(x_pointer == 45 - 5 && y_pointer == 117)
+||(x_pointer == 42 - 5 && y_pointer == 118)
+||(x_pointer == 43 - 5 && y_pointer == 118)
+||(x_pointer == 44 - 5 && y_pointer == 118)
+||(x_pointer == 45 - 5 && y_pointer == 118)
+	);
+	wire tens_digit_9 = tens_digit_score == 9 && ((x_pointer == 42 - 5 && y_pointer == 114)
+||(x_pointer == 43 - 5 && y_pointer == 114)
+||(x_pointer == 44 - 5 && y_pointer == 114)
+||(x_pointer == 45 - 5 && y_pointer == 114)
+||(x_pointer == 42 - 5 && y_pointer == 115)
+||(x_pointer == 45 - 5 && y_pointer == 115)
+||(x_pointer == 42 - 5 && y_pointer == 116)
+||(x_pointer == 43 - 5 && y_pointer == 116)
+||(x_pointer == 44 - 5 && y_pointer == 116)
+||(x_pointer == 45 - 5 && y_pointer == 116)
+||(x_pointer == 45 - 5 && y_pointer == 117)
+||(x_pointer == 42 - 5 && y_pointer == 118)
+||(x_pointer == 43 - 5 && y_pointer == 118)
+||(x_pointer == 44 - 5 && y_pointer == 118)
+||(x_pointer == 45 - 5 && y_pointer == 118));
+
+   wire hundreds_digit_0 = hundreds_digit_score == 0 && ((x_pointer == 32  && y_pointer == 114)
+||(x_pointer == 33  && y_pointer == 114)
+||(x_pointer == 34  && y_pointer == 114)
+||(x_pointer == 35  && y_pointer == 114)
+||(x_pointer == 32  && y_pointer == 115)
+||(x_pointer == 35  && y_pointer == 115)
+||(x_pointer == 32  && y_pointer == 116)
+||(x_pointer == 35  && y_pointer == 116)
+||(x_pointer == 32  && y_pointer == 117)
+||(x_pointer == 35  && y_pointer == 117)
+||(x_pointer == 32  && y_pointer == 118)
+||(x_pointer == 33  && y_pointer == 118)
+||(x_pointer == 34  && y_pointer == 118)
+||(x_pointer == 35  && y_pointer == 118));
+	wire hundreds_digit_1 = hundreds_digit_score == 1 && ((x_pointer == 35  && y_pointer == 114)
+||(x_pointer == 35  && y_pointer == 115)
+||(x_pointer == 35  && y_pointer == 116)
+||(x_pointer == 35  && y_pointer == 117)
+||(x_pointer == 35  && y_pointer == 118));
+   wire hundreds_digit_2 = hundreds_digit_score == 2 && ((x_pointer == 32  && y_pointer == 114)
+||(x_pointer == 33  && y_pointer == 114)
+||(x_pointer == 34  && y_pointer == 114)
+||(x_pointer == 35  && y_pointer == 114)
+||(x_pointer == 35  && y_pointer == 115)
+||(x_pointer == 32  && y_pointer == 116)
+||(x_pointer == 33  && y_pointer == 116)
+||(x_pointer == 34  && y_pointer == 116)
+||(x_pointer == 35  && y_pointer == 116)
+||(x_pointer == 32  && y_pointer == 117)
+||(x_pointer == 32  && y_pointer == 118)
+||(x_pointer == 33  && y_pointer == 118)
+||(x_pointer == 34  && y_pointer == 118)
+||(x_pointer == 35  && y_pointer == 118));
+	wire hundreds_digit_3 = hundreds_digit_score == 3 && ((x_pointer == 32  && y_pointer == 114)
+||(x_pointer == 33  && y_pointer == 114)
+||(x_pointer == 34  && y_pointer == 114)
+||(x_pointer == 35  && y_pointer == 114)
+||(x_pointer == 35  && y_pointer == 115)
+||(x_pointer == 32  && y_pointer == 116)
+||(x_pointer == 33  && y_pointer == 116)
+||(x_pointer == 34  && y_pointer == 116)
+||(x_pointer == 35  && y_pointer == 116)
+||(x_pointer == 35  && y_pointer == 117)
+||(x_pointer == 32  && y_pointer == 118)
+||(x_pointer == 33  && y_pointer == 118)
+||(x_pointer == 34  && y_pointer == 118)
+||(x_pointer == 35  && y_pointer == 118));
+	wire hundreds_digit_4 = hundreds_digit_score == 4 && ((x_pointer == 32  && y_pointer == 114)
+||(x_pointer == 35  && y_pointer == 114)
+||(x_pointer == 32  && y_pointer == 115)
+||(x_pointer == 35  && y_pointer == 115)
+||(x_pointer == 32  && y_pointer == 116)
+||(x_pointer == 33  && y_pointer == 116)
+||(x_pointer == 34  && y_pointer == 116)
+||(x_pointer == 35  && y_pointer == 116)
+||(x_pointer == 35  && y_pointer == 117)
+||(x_pointer == 35  && y_pointer == 118));
+	wire hundreds_digit_5 = hundreds_digit_score == 5 && ((x_pointer == 32  && y_pointer == 114)
+||(x_pointer == 33  && y_pointer == 114)
+||(x_pointer == 34  && y_pointer == 114)
+||(x_pointer == 35  && y_pointer == 114)
+||(x_pointer == 32  && y_pointer == 115)
+||(x_pointer == 32  && y_pointer == 116)
+||(x_pointer == 33  && y_pointer == 116)
+||(x_pointer == 34  && y_pointer == 116)
+||(x_pointer == 35  && y_pointer == 116)
+||(x_pointer == 35  && y_pointer == 117)
+||(x_pointer == 32  && y_pointer == 118)
+||(x_pointer == 33  && y_pointer == 118)
+||(x_pointer == 34  && y_pointer == 118)
+||(x_pointer == 35  && y_pointer == 118));
+	wire hundreds_digit_6 = hundreds_digit_score == 6 && ((x_pointer == 32  && y_pointer == 114)
+||(x_pointer == 33  && y_pointer == 114)
+||(x_pointer == 34  && y_pointer == 114)
+||(x_pointer == 35  && y_pointer == 114)
+||(x_pointer == 32  && y_pointer == 115)
+||(x_pointer == 32  && y_pointer == 116)
+||(x_pointer == 33  && y_pointer == 116)
+||(x_pointer == 34  && y_pointer == 116)
+||(x_pointer == 35  && y_pointer == 116)
+||(x_pointer == 32  && y_pointer == 117)
+||(x_pointer == 35  && y_pointer == 117)
+||(x_pointer == 32  && y_pointer == 118)
+||(x_pointer == 33  && y_pointer == 118)
+||(x_pointer == 34  && y_pointer == 118)
+||(x_pointer == 35  && y_pointer == 118));
+	wire hundreds_digit_7 = hundreds_digit_score == 7 && ((x_pointer == 32  && y_pointer == 114)
+||(x_pointer == 33  && y_pointer == 114)
+||(x_pointer == 34  && y_pointer == 114)
+||(x_pointer == 35  && y_pointer == 114)
+||(x_pointer == 35  && y_pointer == 115)
+||(x_pointer == 35  && y_pointer == 116)
+||(x_pointer == 35  && y_pointer == 117)
+||(x_pointer == 35  && y_pointer == 118));
+	wire hundreds_digit_8 = hundreds_digit_score == 8 && (
+	(x_pointer == 32  && y_pointer == 114)
+||(x_pointer == 33  && y_pointer == 114)
+||(x_pointer == 34  && y_pointer == 114)
+||(x_pointer == 35  && y_pointer == 114)
+||(x_pointer == 32  && y_pointer == 115)
+||(x_pointer == 35  && y_pointer == 115)
+||(x_pointer == 32  && y_pointer == 116)
+||(x_pointer == 33  && y_pointer == 116)
+||(x_pointer == 34  && y_pointer == 116)
+||(x_pointer == 35  && y_pointer == 116)
+||(x_pointer == 32  && y_pointer == 117)
+||(x_pointer == 35  && y_pointer == 117)
+||(x_pointer == 32  && y_pointer == 118)
+||(x_pointer == 33  && y_pointer == 118)
+||(x_pointer == 34  && y_pointer == 118)
+||(x_pointer == 35  && y_pointer == 118)
+	);
+	wire hundreds_digit_9 = hundreds_digit_score == 9 && ((x_pointer == 32  && y_pointer == 114)
+||(x_pointer == 33  && y_pointer == 114)
+||(x_pointer == 34  && y_pointer == 114)
+||(x_pointer == 35  && y_pointer == 114)
+||(x_pointer == 32  && y_pointer == 115)
+||(x_pointer == 35  && y_pointer == 115)
+||(x_pointer == 32  && y_pointer == 116)
+||(x_pointer == 33  && y_pointer == 116)
+||(x_pointer == 34  && y_pointer == 116)
+||(x_pointer == 35  && y_pointer == 116)
+||(x_pointer == 35  && y_pointer == 117)
+||(x_pointer == 32  && y_pointer == 118)
+||(x_pointer == 33  && y_pointer == 118)
+||(x_pointer == 34  && y_pointer == 118)
+||(x_pointer == 35  && y_pointer == 118));
 endmodule
