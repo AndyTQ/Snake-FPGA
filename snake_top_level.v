@@ -136,6 +136,8 @@ module datapath(
 	
 	wire menu_text; // check if the pixel is the menu's text.
 	
+	//register for score
+	reg [1024:0] score;
 	
 	
 	//register for border
@@ -172,6 +174,7 @@ module datapath(
 	delay_counter dc0(clk, 1'b1, frame_update,delayed_clk,main_difficulty);
 	random rand1(clk, rand_X, rand_Y);
 	menu_text_setter menu0(clk, inmenu, x_pointer, y_pointer, menu_text);
+	game_text_setter gametxt0(clk, ingame, main_difficulty, x_pointer, y_pointer, game_text);
 	// check if the pixel is the menu's text.
 	
 	
@@ -265,7 +268,13 @@ module datapath(
 											down = 0;
 											left = 0;
 											right = 1;
-									end 
+									end
+						default: begin //maintain
+										up = up;
+										down = down;
+										left = left;
+										right = right;
+									end
 					endcase	
 					if (allow_moving) begin
 						if(up)
@@ -303,11 +312,12 @@ module datapath(
 	
 				//check good collision
 				if(nonLethal && snakeHead) begin 
-					good_collision<=1;
-					size = size+1;
+					good_collision <= 1;
+					size = size + 1;
+					score <= score + 1;
 				end	
 				else 
-					good_collision<=0;
+					good_collision <= 0;
 			
 				//check bad collision
 				if(lethal && snakeHead) begin
@@ -331,7 +341,7 @@ module datapath(
 	// Display red: the apple, or game over
 	// Display blue: the border
 		assign R = ((ingame && apple) || (inmenu && menu_text));
-		assign G = ((ingame && snakeHead)||(ingame && snakeBody)) || (inmenu && menu_text);
+		assign G = ((ingame && snakeHead)||(ingame && snakeBody)) || (inmenu && menu_text) || (ingame && game_text);
 		assign B = (ingame && border) || (inmenu && menu_text);
 		assign RGB = {R, G, B};
 endmodule
@@ -375,6 +385,7 @@ module kbInput(PS2_CLK,direction,data,reset_n, number);
 	output reg [4:0] number;
 	output reg reset_n = 0; 
 	reg [7:0] code;
+	reg [7:0] release_code;
 	reg [10:0]keyCode, previousCode;
 	reg recordNext = 0;
 	integer count = 0;
@@ -385,10 +396,14 @@ module kbInput(PS2_CLK,direction,data,reset_n, number);
 		count = count + 1;			
 		if(count == 11)
 		begin
-			if(previousCode == 8'hF0)
-			begin
-				code <= keyCode[8:1];
+			if(previousCode != 8'hF0)begin
+				code = keyCode[8:1];
 			end
+			
+			if(previousCode == 8'hF0)begin
+			   release_code = keyCode[8:1];
+			end
+
 			previousCode = keyCode[8:1];
 			count = 0;
 		end
@@ -406,19 +421,19 @@ module kbInput(PS2_CLK,direction,data,reset_n, number);
 			direction = 5'b10000;
 //		else if(code == 8'h5A)
 //			reset <= ~reset;
-		else direction <= direction;
+		else direction = 5'b00000;
 	end
 	
-	always@(code)
+	always@(release_code)
 	begin
-		if(code == 8'h16)
+		if(release_code == 8'h16)
 			number = 5'b00010;
-		else if(code == 8'h1E)
+		else if(release_code == 8'h1E)
 			number = 5'b00100;
-		else if(code == 8'h26)
+		else if(release_code == 8'h26)
 			number = 5'b01000;
-		else number <= number;
-	end	
+		else number = 5'b00000;
+	end
 	
 	
 endmodule
