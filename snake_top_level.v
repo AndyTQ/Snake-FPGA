@@ -78,6 +78,7 @@ module snake_top_level
 	 
 	 wire inmenu;
 	 wire ingame;
+	 wire inresult, game_over;
 	 wire initial_head, allow_moving;
 	 wire [3:0]main_difficulty;
 	 
@@ -86,6 +87,8 @@ module snake_top_level
 	         .direction(direction),
 				.inmenu(inmenu),
 				.ingame(ingame),
+				.inresult(inresult),
+				.game_over(game_over),
 		      .RGB(colour),
 				.x_pointer(x),
 				.y_pointer(y),
@@ -101,8 +104,10 @@ module snake_top_level
 				.clk(CLOCK_50),
 				.number_input(number),
 				.direction(direction),
+				.game_over(game_over),
 				.inmenu(inmenu),
 				.ingame(ingame),
+				.inresult(inresult),
 				.main_difficulty(main_difficulty),
 				.initial_head(initial_head),
 				.allow_moving(allow_moving),
@@ -118,6 +123,7 @@ module datapath(
 	input [3:0] main_difficulty,
 	output [7:0] x_pointer,
 	output [6:0] y_pointer,
+	output reg game_over,
 	input [4:0] direction,
 	
 	input initial_head, allow_moving,
@@ -125,6 +131,7 @@ module datapath(
 	//status of game
    input inmenu,
 	input ingame,
+	input inresult,
 
 	output [2:0] RGB // the colour used for output);
    );
@@ -135,7 +142,7 @@ module datapath(
 	
 	
 	wire menu_text; // check if the pixel is the menu's text.
-	wire game_text;
+	wire game_text, result_text;
 	
 	//register for score
 	reg [12:0] score;
@@ -165,7 +172,7 @@ module datapath(
 	
 	//registers for game status
 	reg lethal, nonLethal;
-	reg bad_collision, good_collision, game_over;
+	reg bad_collision, good_collision;
 	
 	
 	
@@ -176,8 +183,8 @@ module datapath(
 	random rand1(clk, rand_X, rand_Y);
 	menu_text_setter menu0(clk, inmenu, x_pointer, y_pointer, menu_text);
 	game_text_setter gametxt0(clk, score, ingame, main_difficulty, x_pointer, y_pointer, game_text);
+	result_text_setter restxt0(clk, score, inresult, main_difficulty, x_pointer, y_pointer, result_text);
 	// check if the pixel is the menu's text.
-	
 	
 	always@(posedge clk)
 	begin
@@ -218,12 +225,11 @@ module datapath(
 						found = snakeBody;
 					end
 				end
-				
+
 				//Add Snake head
 				snakeHead = (x_pointer >= snake_X[0] && x_pointer <= (snake_X[0]+2))
 								&& (y_pointer >= snake_Y[0] && y_pointer <= (snake_Y[0]+2));
-				
-				
+			
 				//Initial Snake's head
 				if(initial_head) begin
 					snake_Y[0] = 60;
@@ -250,14 +256,14 @@ module datapath(
 											right = 0;
 									 end 
 						//LEFT
-						5'b00100:if(!right)begin
+						5'b00100: if(!right)begin
 											up = 0;
 											down = 0;
 											left = 1;
 											right = 0;
 									 end 
 						//DOWN
-						5'b01000:if(!up)begin
+						5'b01000: if(!up)begin
 											up = 0;
 											down = 1;
 											left = 0;
@@ -287,9 +293,9 @@ module datapath(
 						else if(right)
 							 snake_X[0] <= (snake_X[0] + 2);
 					end
-				end	
-				
-				
+				end
+
+
 				//################################################################################################
 				//APPLE PART STARTS FROM HERE! 
 				//Draw an apple
@@ -341,13 +347,12 @@ module datapath(
 	// Display green: the snake's head and the snake's body
 	// Display red: the apple, or game over
 	// Display blue: the border
-		assign R = ((ingame && apple) || (inmenu && menu_text));
-		assign G = ((ingame && snakeHead)||(ingame && snakeBody)) || (inmenu && menu_text) || (ingame && game_text);
-		assign B = (ingame && border) || (inmenu && menu_text);
+		assign R = ((ingame && apple) || (inmenu && menu_text)) || (inresult && result_text);
+		assign G = ((ingame && snakeHead) || (ingame && snakeBody)) || (inmenu && menu_text) || (ingame && game_text) || (inresult && result_text);
+		assign B = (ingame && border) || (inmenu && menu_text) || (inresult && result_text);
 		assign RGB = {R, G, B};
 endmodule
-	
-	
+
 module random(clk, rand_X, rand_Y);
 	input clk;
 	output reg [7:0] rand_X =6;
@@ -376,7 +381,7 @@ module random(clk, rand_X, rand_Y);
 				rand_Y <= rand_Y + 1;
 		end
 	end
-endmodule	
+endmodule
 
 
 
@@ -528,9 +533,10 @@ module Controller(
 	input [4:0] direction,
 	input [4:0] number_input,
 //	input finished_showing_stage,
-//	input bad_collision,
+	input game_over,
 	output reg inmenu,
 	output reg ingame,
+	output reg inresult,
 	output reg initial_head,
 	output reg allow_moving,
 //	output enable_moving, //for the snake
@@ -547,19 +553,13 @@ module Controller(
 								   ||direction == 5'b01000
 								   ||direction == 5'b10000) ; // detection of starting the snake.
 	
-	
 	reg [3:0] current_state, next_state;
 	
-	 
-//	localparam  MENU      	  = 4'd0,
-//	            STAGE_DISPLAY = 4'd1,
-//               GAME_WAIT     = 4'd2,
-//					INGAME        = 4'd3,
-//					GAME_OVER     = 4'd4;
    localparam INIT = 4'd0,
 	           MENU = 4'd1,
 				  GAME_WAIT = 4'd2,
-				  INGAME = 4'd3;
+				  INGAME = 4'd3,
+				  GAME_OVER = 4'd4;
 
 	always@(*)
       begin: state_table 
@@ -567,7 +567,8 @@ module Controller(
 					INIT: next_state = MENU;
 					MENU: next_state = (number_touched) ? GAME_WAIT : MENU;
 					GAME_WAIT: next_state = (direction_touched) ? INGAME : GAME_WAIT;
-					INGAME: next_state = INGAME; // 20180723: TO BE CHANGED
+					INGAME: next_state = (game_over) ? GAME_OVER : INGAME; // 20180723: TO BE CHANGED
+					GAME_OVER: next_state = GAME_OVER;
             default: next_state = INIT;
         endcase
       end 
@@ -593,6 +594,7 @@ module Controller(
         // By default make all our signals 0
 	       inmenu = 1'b0;
 	       ingame = 1'b0;
+			 inresult = 1'b0;
 			 allow_moving = 1'b0;
 			 initial_head = 1'b0;
 		  case(current_state)
@@ -606,6 +608,9 @@ module Controller(
 				INGAME:begin
 				      ingame = 1'b1;
 						allow_moving = 1'b1;
+					end
+				GAME_OVER: begin
+						inresult = 1'b1;
 					end
 		  endcase
      end

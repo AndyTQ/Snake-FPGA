@@ -6,7 +6,6 @@ module game_text_setter(clk, score, ingame, main_difficulty, x_pointer, y_pointe
 	input [6:0]y_pointer;
 	input [12:0] score;
 	output reg game_text; // check if the pixel is the menu's text.
-
 	
 	reg [3:0] units_digit_score;
 	reg [3:0] tens_digit_score;
@@ -38,7 +37,7 @@ module game_text_setter(clk, score, ingame, main_difficulty, x_pointer, y_pointe
 				 game_text <= 1'b0;
 			 end
 	end
-	
+
 	wire digits = (units_digit_0
 				  ||units_digit_1
 				  ||units_digit_2
@@ -49,7 +48,7 @@ module game_text_setter(clk, score, ingame, main_difficulty, x_pointer, y_pointe
 				  ||units_digit_7
 				  ||units_digit_8
 				  ||units_digit_9);
-	
+		
 	wire tens = (tens_digit_0
 				  ||tens_digit_1
 				  ||tens_digit_2
