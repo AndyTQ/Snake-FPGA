@@ -16,7 +16,7 @@ module game_text_setter(clk, score, ingame, main_difficulty, x_pointer, y_pointe
 	always@(posedge clk)begin
 		units_digit_score <= score % 10;
 	   tens_digit_score <= ((score - (score % 10)) / 10) % 10;
-		hundreds_digit_score <= (score - (score % 10) - 	(10 * ((score - (score % 10)) / 10) % 10)) / 100;
+		hundreds_digit_score <= score / 100;
 	end
 	
 
@@ -61,7 +61,16 @@ module game_text_setter(clk, score, ingame, main_difficulty, x_pointer, y_pointe
 				  ||tens_digit_8
 				  ||tens_digit_9);
 	
-	wire hundreds = 0;
+	wire hundreds = (hundreds_digit_0
+				  ||hundreds_digit_1
+				  ||hundreds_digit_2
+				  ||hundreds_digit_3
+				  ||hundreds_digit_4
+				  ||hundreds_digit_5
+				  ||hundreds_digit_6
+				  ||hundreds_digit_7
+				  ||hundreds_digit_8
+				  ||hundreds_digit_9);
 	
 	
 	// wires for main texts
