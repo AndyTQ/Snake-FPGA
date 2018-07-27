@@ -156,14 +156,17 @@ module datapath(
 	
 	//registers for snake
 	reg [6:0] size;
-	reg [7:0] snake_X[0:511];
-	reg [6:0] snake_Y[0:511];
+	reg [7:0] snake_X[0:127];
+	reg [6:0] snake_Y[0:127];
 	reg found;
+	reg found_collidable_body;
 	reg snakeHead;
 	reg snakeBody;
-	reg snakeBody_collision;  //special detector for the detection of snake colliding with itself
+	
+	reg snakeBody_collision;
+	
 	reg [1:0]currentDirect;
-	integer bodycounter, bodycounter2, bodycounter3;
+	integer bodycounter, bodycounter2, bodycounter3, bodycounter4;
 	reg up,down,left,right;
 	
 	//registers for apple
@@ -227,14 +230,21 @@ module datapath(
 				found = 0;
 				for(bodycounter = 1; bodycounter <= size; bodycounter = bodycounter + 1)begin
 					if(~found)begin				
-						snakeBody = ( (x_pointer >= snake_X[bodycounter] && x_pointer <= snake_X[bodycounter]+2) 
-								  && (y_pointer >= snake_Y[bodycounter] && y_pointer <= snake_Y[bodycounter]+2));
-						snakeBody_collision = (bodycounter >= 5) && ( (x_pointer >= snake_X[bodycounter] && x_pointer <= snake_X[bodycounter]+2) 
+						snakeBody = ((x_pointer >= snake_X[bodycounter] && x_pointer <= snake_X[bodycounter]+2) 
 								  && (y_pointer >= snake_Y[bodycounter] && y_pointer <= snake_Y[bodycounter]+2));
 						found = snakeBody;
 					end
 				end
-
+				
+				//Update Collidable body
+				found_collidable_body = 0;
+				for(bodycounter4 = 1; bodycounter4 <= size; bodycounter4 = bodycounter4 + 1)begin
+					if(~found_collidable_body)begin				
+						snakeBody_collision = (bodycounter4 >= 5) && ((x_pointer >= snake_X[bodycounter4] && x_pointer <= snake_X[bodycounter4]+2) 
+								  && (y_pointer >= snake_Y[bodycounter4] && y_pointer <= snake_Y[bodycounter4]+2));
+						found_collidable_body = snakeBody_collision;
+					end
+				end
 				//Add Snake head
 				snakeHead = (x_pointer >= snake_X[0] && x_pointer <= (snake_X[0]+2))
 								&& (y_pointer >= snake_Y[0] && y_pointer <= (snake_Y[0]+2));
@@ -252,7 +262,7 @@ module datapath(
 							if(bodycounter2 <= size - 1)begin
 								snake_X[bodycounter2] = snake_X[bodycounter2 - 1];
 								snake_Y[bodycounter2] = snake_Y[bodycounter2 - 1];
-							end	
+							end
 					end	
 						
 					//update snake's direction
@@ -317,15 +327,6 @@ module datapath(
 						appleX <= rand_X;
 						appleY <= rand_Y;
 				end
-				
-				
-				
-				
-				
-				
-				
-				
-				
 				
 				//###############################################################################################
 				//CHECK COLLISION
