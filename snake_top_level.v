@@ -147,17 +147,21 @@ module datapath(
 	//register for score
 	reg [12:0] score;
 	
+	//register for hiscore
+	//*******************DO NOT RESET*******************
+	reg [12:0] hiscore;
 	
 	//register for border
 	reg border;
 	
 	//registers for snake
 	reg [6:0] size;
-	reg [7:0] snake_X[0:127];
-	reg [6:0] snake_Y[0:127];
+	reg [7:0] snake_X[0:511];
+	reg [6:0] snake_Y[0:511];
 	reg found;
 	reg snakeHead;
 	reg snakeBody;
+	reg snakeBody_collision;  //special detector for the detection of snake colliding with itself
 	reg [1:0]currentDirect;
 	integer bodycounter, bodycounter2, bodycounter3;
 	reg up,down,left,right;
@@ -182,9 +186,12 @@ module datapath(
 	delay_counter dc0(clk, 1'b1, frame_update,delayed_clk,main_difficulty);
 	random rand1(clk, rand_X, rand_Y);
 	menu_text_setter menu0(clk, inmenu, x_pointer, y_pointer, menu_text);
-	game_text_setter gametxt0(clk, score, ingame, main_difficulty, x_pointer, y_pointer, game_text);
+	game_text_setter gametxt0(clk, score, hiscore, ingame, main_difficulty, x_pointer, y_pointer, game_text);
 	result_text_setter restxt0(clk, score, inresult, main_difficulty, x_pointer, y_pointer, result_text);
 	// check if the pixel is the menu's text.
+	
+	
+
 	
 	always@(posedge clk)
 	begin
@@ -194,9 +201,9 @@ module datapath(
 					snake_X[bodycounter3] = 0;
 					snake_Y[bodycounter3] = 0;
 			 end
-				
+
 			 //initialze snake's size
-			 size = 1;	
+			 size = 1;
 			 
 			 //start game
 			 game_over=0;
@@ -208,7 +215,7 @@ module datapath(
 		else if(ingame)begin
 				//################################################################################################
 				//Add border
-				border <= (   ((x_pointer >= 2) && (x_pointer <= 4)&&(y_pointer >= 2) && (y_pointer <=112))
+				border <= (((x_pointer >= 2) && (x_pointer <= 4)&&(y_pointer >= 2) && (y_pointer <=112))
 								||((x_pointer >= 156)&& (x_pointer <= 158)&&(y_pointer >= 2) && (y_pointer <=112))
 								||((x_pointer >= 2) && (x_pointer <= 158)&&(y_pointer >= 2) && (y_pointer <= 4))
 								||((x_pointer >= 2) && (x_pointer <= 158)&&(y_pointer >= 110) && (y_pointer <= 112)));
@@ -221,6 +228,8 @@ module datapath(
 				for(bodycounter = 1; bodycounter <= size; bodycounter = bodycounter + 1)begin
 					if(~found)begin				
 						snakeBody = ( (x_pointer >= snake_X[bodycounter] && x_pointer <= snake_X[bodycounter]+2) 
+								  && (y_pointer >= snake_Y[bodycounter] && y_pointer <= snake_Y[bodycounter]+2));
+						snakeBody_collision = (bodycounter >= 5) && ( (x_pointer >= snake_X[bodycounter] && x_pointer <= snake_X[bodycounter]+2) 
 								  && (y_pointer >= snake_Y[bodycounter] && y_pointer <= snake_Y[bodycounter]+2));
 						found = snakeBody;
 					end
@@ -309,10 +318,19 @@ module datapath(
 						appleY <= rand_Y;
 				end
 				
+				
+				
+				
+				
+				
+				
+				
+				
+				
 				//###############################################################################################
 				//CHECK COLLISION
 				//if is in lethal position
-				lethal = border || snakeBody;
+				lethal = border || snakeBody_collision;
 	
 				//if is in nonLethal position
 				nonLethal = apple;
@@ -321,8 +339,12 @@ module datapath(
 				if(nonLethal && snakeHead) begin 
 					good_collision <= 1;
 					size = size + 1;
-					score <= score + 1;
-				end	
+					//update score
+					score = score + 1;
+					//update hiscore
+					if (score > hiscore)
+						hiscore = score;
+				end
 				else 
 					good_collision <= 0;
 			
