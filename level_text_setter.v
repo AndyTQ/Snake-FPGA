@@ -1,5 +1,6 @@
-module level_text_setter(clk, inlevelDisplay, current_level, main_difficulty, x_pointer, y_pointer, level_text, finished_displaying_level);
+module level_text_setter(clk, game_reset, inlevelDisplay, current_level, main_difficulty, x_pointer, y_pointer, level_text, finished_displaying_level);
 // display for 3 seconds!
+	input game_reset;
    input inlevelDisplay;
 	input [3:0] main_difficulty;
 	input [3:0] current_level;
@@ -14,6 +15,8 @@ module level_text_setter(clk, inlevelDisplay, current_level, main_difficulty, x_
 	//countdown
 	always@(posedge clk)
 	begin
+		if (game_reset)
+			counter = 149999999;
 		if (inlevelDisplay) begin
 			if (counter == 0)
 				counter = 149999999;
