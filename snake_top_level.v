@@ -74,7 +74,7 @@ module snake_top_level
 	 wire [4:0] direction;
 	 wire [4:0] number;
 //	 kbInput kbIn(CLOCK_50, KEY, SW, direction, reset);
-	 kbInput kbIn(PS2_CLK,direction,PS2_DAT,reset_n, number);
+	 kbInput kbIn(CLOCK_50, PS2_CLK,direction,PS2_DAT,reset_n, number);
 	 
 	 wire inmenu;
 	 wire ingame;
@@ -625,12 +625,12 @@ endmodule
 
 
 
-module kbInput(PS2_CLK,direction,data,reset_n, number);
-	input PS2_CLK, data;
+module kbInput(clk, PS2_CLK,direction,data,reset_n, number);
+	input PS2_CLK, data, clk;
 	output reg [4:0] direction;
 	output reg [4:0] number;
 	output reg reset_n = 0; 
-	reg [7:0] code;
+	reg [7:0] press_code;
 	reg [7:0] release_code;
 	reg [10:0]keyCode, previousCode;
 	reg recordNext = 0;
@@ -642,8 +642,8 @@ module kbInput(PS2_CLK,direction,data,reset_n, number);
 		count = count + 1;			
 		if(count == 11)
 		begin
-			if(previousCode != 8'hF0)begin
-				code = keyCode[8:1];
+			if(previousCode == 8'hE0)begin
+				press_code = keyCode[8:1];
 			end
 			
 			if(previousCode == 8'hF0)begin
@@ -655,22 +655,22 @@ module kbInput(PS2_CLK,direction,data,reset_n, number);
 		end
 	end
 	
-	always@(code)
+	always@(posedge clk)
 	begin
-		if(code == 8'h75)
+		if(press_code == 8'h75)
 			direction = 5'b00010;
-		else if(code == 8'h6B)
+		else if(press_code == 8'h6B)
 			direction = 5'b00100;
-		else if(code == 8'h72)
+		else if(press_code == 8'h72)
 			direction = 5'b01000;
-		else if(code == 8'h74)
+		else if(press_code == 8'h74)
 			direction = 5'b10000;
-//		else if(code == 8'h5A)
+//		else if(press_code == 8'h5A)
 //			reset <= ~reset;
 		else direction = 5'b00000;
 	end
 	
-	always@(release_code)
+	always@(posedge clk)
 	begin
 		if(release_code == 8'h16)
 			number = 5'b00010;
