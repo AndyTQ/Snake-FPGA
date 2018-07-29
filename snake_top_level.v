@@ -258,7 +258,13 @@ module datapath(
 		
 			//initialize apple's position
 			appleX = 16;
-			appleY = 17;			
+			appleY = 17;
+	
+			//initialize direction
+			up = 0;
+			down = 0;
+			left = 0;
+			right = 0;
 		end
 		
 		else if(ingame)begin
@@ -308,8 +314,8 @@ module datapath(
 				
 				 //initialize snake's head
 				if(initial_head) begin
-					snake_Y[0] = 5;
-					snake_X[0] = 5;
+					snake_Y[0] = 8;
+					snake_X[0] = 8;
 				end
 				
 				
@@ -487,14 +493,14 @@ module datapath(
 			
 				//check bad collision
 				if(lethal && snakeHead) begin
-					bad_collision<=1;
+					bad_collision<= 1;
 				end
 				else begin 
-					bad_collision<=0;
+					bad_collision<= 0;
 				end
 				//check game over
 				if(bad_collision) begin
-					game_over<=1;
+					game_over <= 1;
 				end
 		end
 	end
