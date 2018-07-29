@@ -73,6 +73,7 @@ module snake_top_level
 	 //direction wire
 	 wire [4:0] direction;
 	 wire [4:0] number;
+	 wire direction_touched;
 //	 kbInput kbIn(CLOCK_50, KEY, SW, direction, reset);
 	 kbInput kbIn(CLOCK_50, PS2_CLK,direction,PS2_DAT,reset_n, number);
 	 
@@ -119,7 +120,7 @@ module snake_top_level
 				.initial_head(initial_head),
 				.allow_moving(allow_moving),
 				.LEDdebug(LEDR[0]),
-				.next_level(next_level)
+				.next_level(next_level),
 	 );
 	 
 	 
@@ -184,6 +185,7 @@ module datapath(
 	reg snakeBody;
 	
 	reg snakeBody_collision;
+	reg snakeHead_collision;
 	
 	reg [1:0]currentDirect;
 	integer bodycounter, bodycounter2, bodycounter3, bodycounter4;
@@ -265,6 +267,8 @@ module datapath(
 			down = 0;
 			left = 0;
 			right = 0;
+			
+
 		end
 		
 		else if(ingame)begin
@@ -312,12 +316,55 @@ module datapath(
 				snakeHead = (x_pointer >= snake_X[0] && x_pointer <= (snake_X[0]+2))
 								&& (y_pointer >= snake_Y[0] && y_pointer <= (snake_Y[0]+2));
 				
+				
+				snakeHead_collision = (x_pointer > snake_X[0] && x_pointer < (snake_X[0]+2))
+								&& (y_pointer > snake_Y[0] && y_pointer < (snake_Y[0]+2));
 				 //initialize snake's head
 				if(initial_head) begin
 					snake_Y[0] = 8;
 					snake_X[0] = 8;
 				end
 				
+				
+					
+				//update snake's direction
+				case(direction)
+					//UP
+					5'b00010: if(!down)begin
+										up = 1;
+										down = 0;
+										left = 0;
+										right = 0;
+								 end 
+					//LEFT
+					5'b00100: if(!right)begin
+										up = 0;
+										down = 0;
+										left = 1;
+										right = 0;
+								 end 
+					//DOWN
+					5'b01000: if(!up)begin
+										up = 0;
+										down = 1;
+										left = 0;
+										right = 0;
+								end 
+					//RIGHT
+					5'b10000: if(!left)begin
+										up = 0;
+										down = 0;
+										left = 0;
+										right = 1;
+								end
+					default: begin //maintain
+									up = up;
+									down = down;
+									left = left;
+									right = right;
+								end
+					endcase	
+	
 				
 				//update snake's position
 				if(delayed_clk)begin
@@ -326,45 +373,8 @@ module datapath(
 								snake_X[bodycounter2] = snake_X[bodycounter2 - 1];
 								snake_Y[bodycounter2] = snake_Y[bodycounter2 - 1];
 							end
-					end	
-						
-					//update snake's direction
-					case(direction)
-						//UP
-						5'b00010: if(!down)begin
-											up = 1;
-											down = 0;
-											left = 0;
-											right = 0;
-									 end 
-						//LEFT
-						5'b00100: if(!right)begin
-											up = 0;
-											down = 0;
-											left = 1;
-											right = 0;
-									 end 
-						//DOWN
-						5'b01000: if(!up)begin
-											up = 0;
-											down = 1;
-											left = 0;
-											right = 0;
-									end 
-						//RIGHT
-						5'b10000: if(!left)begin
-											up = 0;
-											down = 0;
-											left = 0;
-											right = 1;
-									end
-						default: begin //maintain
-										up = up;
-										down = down;
-										left = left;
-										right = right;
-									end
-					endcase	
+					end
+					
 					if (allow_moving) begin
 						if(up)
 							 snake_Y[0] <= (snake_Y[0] - 3);
@@ -376,6 +386,7 @@ module datapath(
 							 snake_X[0] <= (snake_X[0] + 3);
 					end
 				end
+				
 
 
 				//################################################################################################
@@ -492,7 +503,7 @@ module datapath(
 
 			
 				//check bad collision
-				if(lethal && snakeHead) begin
+				if(lethal && snakeHead_collision) begin
 					bad_collision<= 1;
 				end
 				else begin 
@@ -642,7 +653,7 @@ module kbInput(clk, PS2_CLK,direction,data,reset_n, number);
 		count = count + 1;			
 		if(count == 11)
 		begin
-			if(previousCode == 8'hE0)begin
+			if(previousCode != 8'hF0)begin
 				press_code = keyCode[8:1];
 			end
 			
@@ -657,17 +668,21 @@ module kbInput(clk, PS2_CLK,direction,data,reset_n, number);
 	
 	always@(posedge clk)
 	begin
-		if(press_code == 8'h75)
+		if(press_code == 8'h75)begin
 			direction = 5'b00010;
-		else if(press_code == 8'h6B)
+		end
+		else if(press_code == 8'h6B)begin
 			direction = 5'b00100;
-		else if(press_code == 8'h72)
+		end
+		else if(press_code == 8'h72)begin
 			direction = 5'b01000;
-		else if(press_code == 8'h74)
+		end
+		else if(press_code == 8'h74)begin
 			direction = 5'b10000;
-//		else if(press_code == 8'h5A)
-//			reset <= ~reset;
-		else direction = 5'b00000;
+		end
+		else begin
+			direction = 5'b00000;
+		end
 	end
 	
 	always@(posedge clk)
