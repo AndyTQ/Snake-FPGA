@@ -103,6 +103,7 @@ module snake_top_level
 				.initial_head(initial_head),
 				.allow_moving(allow_moving),
 				.finished_displaying_level(finished_displaying_level),
+				.continue_reset(continue_reset),
 				.next_level(next_level)
 	 );
 	 
@@ -126,6 +127,7 @@ module snake_top_level
 				.allow_moving(allow_moving),
 				.LEDdebug(LEDR[0]),
 				.next_level(next_level),
+				.continue_reset(continue_reset),
 				.direction_touched(direction_touched)
 	 );
 	 
@@ -137,6 +139,7 @@ module datapath(
    input clk,
 	input [3:0] main_difficulty,
 	input game_reset,
+	input continue_reset,
 	output [7:0] x_pointer,
 	output [6:0] y_pointer,
 	output reg game_over,
@@ -252,6 +255,10 @@ module datapath(
 		if(game_reset) begin
 			score = 0;
 			current_level = 0;
+			next_level = 0;
+		end
+		if(continue_reset) begin
+			score = 0;
 			next_level = 0;
 		end
 		if(initial_game) begin
@@ -674,7 +681,7 @@ module kbInput(clk, initial_game, PS2_CLK,direction,data,reset_n, number, direct
 		count = count + 1;			
 		if(count == 11)
 		begin
-			if(previousCode == 8'hE0)begin
+			if(previousCode != 8'hF0)begin
 				press_code = keyCode[8:1];
 			end
 			
@@ -855,6 +862,7 @@ module Controller(
 	output reg initial_game,
 	output reg initial_head,
 	output reg game_reset,
+	output reg continue_reset,
 	output reg allow_moving,
 //	output enable_moving, //for the snake
 //	output game_over,
@@ -899,7 +907,15 @@ module Controller(
 						else
 							next_state = INGAME; //MAINTAIN
 					end
-					GAME_OVER: next_state = (reset_n) ? INIT : GAME_OVER;
+//					GAME_OVER: next_state = (reset_n) ? INIT : GAME_OVER;
+					GAME_OVER: begin
+						if (number_input == 5'b00010)
+							next_state = LEVEL_DISPLAY;
+						else if (reset_n)
+							next_state = INIT;
+						else
+							next_state = GAME_OVER;
+					end
             default: next_state = INIT;
         endcase
       end 
@@ -918,6 +934,20 @@ module Controller(
 					main_difficulty <= 4'd2;
 				else
 					main_difficulty <= 4'd1;
+		end
+	end
+	
+	always@(posedge clk)begin
+//					case(selected_difficulty)
+//						3'b001: main_difficulty <= 2'd10;
+//						3'b010: main_difficulty <= 2'd3;
+//						3'b100: main_difficulty <= 2'd1;
+//						default: main_difficulty <= 2'd1;
+//					endcase
+		continue_reset = 0;
+		if (current_state == GAME_OVER) begin
+				if (number_input == 5'b00010)
+					continue_reset = 1;
 		end
 	end
 		
