@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<img id="scream" src="./test.bmp" alt="The Scream" width="160" height="120">
+<canvas id="myCanvas" width="160" height="120" style="border:1px solid #d3d3d3;">
+Your browser does not support the HTML5 canvas tag.</canvas>
+<canvas id="visualResult" width="160" height="120" style="border:1px solid #d3d3d3;">
+Your browser does not support the HTML5 canvas tag.</canvas>
+<div id="result">
+<p> Results will be shown here: </p>
+</div>
+<script>
+document.getElementById("scream").onload = function() {
+    var c = document.getElementById("myCanvas");
+    var c2 = document.getElementById("visualResult");
+    var ctx = c.getContext("2d");
+    var ctx2 = c2.getContext("2d");
+    var img = document.getElementById("scream");
+    ctx.drawImage(img, 0, 0);
+    var imgData = ctx.getImageData(0, 0, c.width, c.height);
+    // invert colors
+    var i;
+    var x_coordinate = 0;
+    var y_coordinate = 0;
+    var pixels_count = 0;
+    for (i = 0; i < imgData.data.length; i += 4) {
+        if (imgData.data[i] != 255 &&
+            imgData.data[i + 1] != 255 &&
+            imgData.data[i + 2] != 255
+        ) {
+            if (pixels_count == 0) {
+                document.getElementById("result").innerHTML += "  (x_pointer == " + String(x_coordinate) + " && y_pointer == " + String(y_coordinate) + ")" + "<br>";
+            }
+            else {
+                document.getElementById("result").innerHTML += "||(x_pointer == " + String(x_coordinate) + " && y_pointer == " + String(y_coordinate) + ")" + "<br>";
+            }
+            pixels_count++;
+            ctx2.fillRect(x_coordinate, y_coordinate, 1, 1);
+        }
+        
+        x_coordinate++;
+     
+        if (x_coordinate == 160) {
+            y_coordinate++;
+            x_coordinate = 0;
+        }
+    }
+
+    // ctx.putImageData(imgData, 0, 0);
+
+    
+};
+</script>
+
+</body>
+</html>
