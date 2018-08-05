@@ -2,7 +2,7 @@
 <html>
 <body>
 
-<img id="scream" src="./test.bmp" alt="The Scream" width="160" height="120">
+<img id="importedImage" src="./test.bmp" width="160" height="120">
 <canvas id="myCanvas" width="160" height="120" style="border:1px solid #d3d3d3;">
 Your browser does not support the HTML5 canvas tag.</canvas>
 <canvas id="visualResult" width="160" height="120" style="border:1px solid #d3d3d3;">
@@ -11,12 +11,12 @@ Your browser does not support the HTML5 canvas tag.</canvas>
 <p> Results will be shown here: </p>
 </div>
 <script>
-document.getElementById("scream").onload = function() {
+document.getElementById("importedImage").onload = function() {
     var c = document.getElementById("myCanvas");
     var c2 = document.getElementById("visualResult");
     var ctx = c.getContext("2d");
     var ctx2 = c2.getContext("2d");
-    var img = document.getElementById("scream");
+    var img = document.getElementById("importedImage");
     ctx.drawImage(img, 0, 0);
     var imgData = ctx.getImageData(0, 0, c.width, c.height);
     // invert colors
