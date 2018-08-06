@@ -1,3 +1,4 @@
+//	AUTHOR: WEI CONG, TIANQUAN DI
 module snake_top_level
 	(
 		CLOCK_50,						//	On Board 50 MHz
