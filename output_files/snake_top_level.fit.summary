@@ -1,0 +1,20 @@
+Fitter Status : Successful - Mon Jul 30 16:59:37 2018
+Quartus Prime Version : 16.0.0 Build 211 04/27/2016 SJ Lite Edition
+Revision Name : snake_top_level
+Top-level Entity Name : snake_top_level
+Family : Cyclone V
+Device : 5CSEMA5F31C6
+Timing Models : Final
+Logic utilization (in ALMs) : 6,027 / 32,070 ( 19 % )
+Total registers : 2927
+Total pins : 62 / 457 ( 14 % )
+Total virtual pins : 0
+Total block memory bits : 57,600 / 4,065,280 ( 1 % )
+Total RAM Blocks : 8 / 397 ( 2 % )
+Total DSP Blocks : 0 / 87 ( 0 % )
+Total HSSI RX PCSs : 0
+Total HSSI PMA RX Deserializers : 0
+Total HSSI TX PCSs : 0
+Total HSSI PMA TX Serializers : 0
+Total PLLs : 1 / 6 ( 17 % )
+Total DLLs : 0 / 4 ( 0 % )

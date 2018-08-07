@@ -1,0 +1,17 @@
+Analysis & Synthesis Status : Successful - Mon Jul 30 16:55:37 2018
+Quartus Prime Version : 16.0.0 Build 211 04/27/2016 SJ Lite Edition
+Revision Name : snake_top_level
+Top-level Entity Name : snake_top_level
+Family : Cyclone V
+Logic utilization (in ALMs) : N/A
+Total registers : 2348
+Total pins : 62
+Total virtual pins : 0
+Total block memory bits : 57,600
+Total DSP Blocks : 0
+Total HSSI RX PCSs : 0
+Total HSSI PMA RX Deserializers : 0
+Total HSSI TX PCSs : 0
+Total HSSI PMA TX Serializers : 0
+Total PLLs : 1
+Total DLLs : 0

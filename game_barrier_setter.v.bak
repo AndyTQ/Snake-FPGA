@@ -1,0 +1,63 @@
+module game_text_setter(clk, current_level, x_pointer, y_pointer, barrier);
+   input ingame;
+	input [3:0] main_difficulty;
+   input clk;
+   input [7:0]x_pointer;
+	input [6:0]y_pointer;
+	input [12:0] score;
+	input [12:0] hiscore;
+	output reg game_text; // check if the pixel is the menu's text.
+	
+	reg [3:0] units_digit_score;
+	reg [3:0] tens_digit_score;
+	reg [3:0] hundreds_digit_score;
+	
+	reg [3:0] units_digit_hi_score;
+	reg [3:0] tens_digit_hi_score;
+	reg [3:0] hundreds_digit_hi_score;
+	
+	
+	always@(posedge clk)begin
+		units_digit_score <= score % 10;
+	   tens_digit_score <= ((score - (score % 10)) / 10) % 10;
+		hundreds_digit_score <= score / 100;
+		
+		units_digit_hi_score <= hiscore % 10;
+	   tens_digit_hi_score <= ((hiscore - (hiscore % 10)) / 10) % 10;
+		hundreds_digit_hi_score <= hiscore / 100;
+	end
+	
+
+	//menu's normal text
+	always@(posedge clk)
+	begin
+		if (ingame)
+			 begin
+			 if (main_texts
+			     ||easy
+				  ||normal
+				  ||hard
+				  ||units
+				  ||tens
+				  ||hundreds
+				  ||units_hi
+				  ||tens_hi
+				  ||hundreds_hi
+				  )
+				 game_text <= 1'b1;
+			 else
+				 game_text <= 1'b0;
+			 end
+	end
+
+	wire units = (units_digit_0
+				  ||units_digit_1
+				  ||units_digit_2
+				  ||units_digit_3
+				  ||units_digit_4
+				  ||units_digit_5
+				  ||units_digit_6
+				  ||units_digit_7
+				  ||units_digit_8
+				  ||units_digit_9);
+endmodule

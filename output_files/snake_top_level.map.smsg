@@ -1,0 +1,3 @@
+Warning (10268): Verilog HDL information at snake_top_level.v(253): always construct contains both blocking and non-blocking assignments File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 253
+Info (10281): Verilog HDL Declaration information at snake_top_level.v(859): object "ingame" differs only in case from object "INGAME" in the same scope File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 859
+Info (10281): Verilog HDL Declaration information at snake_top_level.v(856): object "game_over" differs only in case from object "GAME_OVER" in the same scope File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 856
