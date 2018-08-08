@@ -73,14 +73,15 @@ module snake_top_level
 	 //direction wire
 	 wire [4:0] direction;
 	 wire [4:0] number;
-	 wire direction_touched;
+	 wire direction_touched, any_touched;
 
 	 wire reset_n;
-	 kbInput kbIn(CLOCK_50, initial_game, PS2_CLK,direction,PS2_DAT,reset_n, number, direction_touched);
+	 kbInput kbIn(CLOCK_50, initial_game, PS2_CLK,direction,PS2_DAT,reset_n, number, direction_touched, any_touched);
 	 
 	 
 	 wire inmenu;
 	 wire ingame;
+	 wire inLogoDisplay;
 	 wire inresult, game_over;
 	 wire initial_game, allow_moving;
 	 wire [3:0]main_difficulty;
@@ -104,7 +105,8 @@ module snake_top_level
 				.allow_moving(allow_moving),
 				.finished_displaying_level(finished_displaying_level),
 				.continue_reset(continue_reset),
-				.next_level(next_level)
+				.next_level(next_level),
+				.inLogoDisplay(inLogoDisplay)
 	 );
 	 
 
@@ -128,7 +130,9 @@ module snake_top_level
 				.LEDdebug(LEDR[0]),
 				.next_level(next_level),
 				.continue_reset(continue_reset),
-				.direction_touched(direction_touched)
+				.direction_touched(direction_touched),
+				.inLogoDisplay(inLogoDisplay),
+				.any_touched(any_touched)
 	 );
 	 
 	 
@@ -154,6 +158,7 @@ module datapath(
 	input ingame,
 	input inresult,
 	input inlevelDisplay,
+	input inLogoDisplay,
 
 	output [2:0] RGB // the colour used for output);
    );
@@ -166,7 +171,7 @@ module datapath(
 	
 	
 	wire menu_text; // check if the pixel is the menu's text.
-	wire game_text, result_text, level_text;
+	wire game_text, result_text, level_text, logo_text;
 	
 	//register for score
 	reg [12:0] score;
@@ -240,6 +245,7 @@ module datapath(
 	random_apple rand1(clk, rand_apple_X, rand_apple_Y);
 	random_props rand2(clk, rand_props_X, rand_props_Y);
 	random_choice rand3(clk, 2, props_choice);
+	logo_text_setter logo0(clk, inLogoDisplay,x_pointer, y_pointer, logo_text);
 	menu_text_setter menu0(clk, inmenu, x_pointer, y_pointer, menu_text);
 	game_text_setter gametxt0(clk, score, hiscore, ingame, main_difficulty, x_pointer, y_pointer, game_text);
 	result_text_setter restxt0(clk, score, inresult, main_difficulty, x_pointer, y_pointer, result_text);
@@ -556,7 +562,8 @@ module datapath(
 		|| (inresult && result_text)
 		|| (ingame && toxic)
 		|| (ingame && negative_score)
-		|| (inlevelDisplay && level_text);
+		|| (inlevelDisplay && level_text)
+		|| (inLogoDisplay && logo_text);
 		assign G = ((ingame && snakeHead) 
 		|| (ingame && snakeBody)) 
 		|| (inmenu && menu_text) 
@@ -564,7 +571,8 @@ module datapath(
 		|| (inresult && result_text) 
 		|| (ingame && bonus_score)  
 		|| (ingame && negative_score)
-		|| (inlevelDisplay && level_text);
+		|| (inlevelDisplay && level_text)
+		|| (inLogoDisplay && logo_text);
 		assign B = (ingame && border) 
 		|| (inmenu && menu_text) 
 		|| (inresult && result_text) 
@@ -572,7 +580,8 @@ module datapath(
 		|| (ingame && bonus_score)  
 		|| (ingame && negative_score)
 		|| (inlevelDisplay && level_text)
-		|| (ingame && barrier);
+		|| (ingame && barrier)
+		|| (inLogoDisplay && logo_text);
 		assign RGB = {R, G, B};
 endmodule
 
@@ -663,12 +672,13 @@ endmodule
 
 
 
-module kbInput(clk, initial_game, PS2_CLK,direction,data,reset_n, number, direction_touched);
+module kbInput(clk, initial_game, PS2_CLK,direction,data,reset_n, number, direction_touched, any_touched);
 	input PS2_CLK, data, clk, initial_game;
 	output reg [4:0] direction;
 	output reg [4:0] number;
 	output reg reset_n = 0;
 	output reg direction_touched;
+	output reg any_touched;
 	reg [7:0] press_code;
 	reg [7:0] release_code;
 	reg [10:0]keyCode, previousCode;
@@ -677,6 +687,7 @@ module kbInput(clk, initial_game, PS2_CLK,direction,data,reset_n, number, direct
 
 	always@(posedge PS2_CLK)
 	begin
+	   any_touched = 0;
 		keyCode[count] = data;
 		count = count + 1;			
 		if(count == 11)
@@ -686,6 +697,7 @@ module kbInput(clk, initial_game, PS2_CLK,direction,data,reset_n, number, direct
 			end
 			
 			if(previousCode == 8'hF0)begin
+			   any_touched = 1;
 			   release_code = keyCode[8:1];
 			end
 
@@ -854,10 +866,12 @@ module Controller(
 	input finished_displaying_level, next_level,
 //	input finished_showing_stage,
 	input game_over,
+	input any_touched,
 	input direction_touched,
 	output reg inmenu,
 	output reg ingame,
 	output reg inresult,
+	output reg inLogoDisplay,
 	output reg inlevelDisplay,
 	output reg initial_game,
 	output reg initial_head,
@@ -880,17 +894,21 @@ module Controller(
 	
 	reg [3:0] current_state, next_state;
 	
-   localparam INIT = 4'd0,
-	           MENU = 4'd1,
-				  LEVEL_DISPLAY = 4'd2,
-				  GAME_INIT = 4'd3,
-				  GAME_WAIT = 4'd4,
-				  INGAME = 4'd5,
-				  GAME_OVER = 4'd6;
+   localparam GLOBAL_WAIT = 4'd0,
+				  LOGO = 4'd1,
+				  INIT = 4'd2,
+	           MENU = 4'd3,
+				  LEVEL_DISPLAY = 4'd4,
+				  GAME_INIT = 4'd5,
+				  GAME_WAIT = 4'd6,
+				  INGAME = 4'd7,
+				  GAME_OVER = 4'd8;
 
 	always@(*)
       begin: state_table 
             case (current_state)
+					GLOBAL_WAIT: next_state = LOGO;
+					LOGO: next_state = (any_touched) ? INIT : LOGO;
 					INIT: next_state = MENU;
 					MENU: next_state = (number_touched) ? LEVEL_DISPLAY : MENU;
 					LEVEL_DISPLAY: next_state = (finished_displaying_level) ? GAME_INIT : LEVEL_DISPLAY; 
@@ -953,6 +971,7 @@ module Controller(
 		
 	always@(*) begin //enable_signals
         // By default make all our signals 0
+		    inLogoDisplay = 1'b0;
 	       inmenu = 1'b0;
 	       ingame = 1'b0;
 			 inresult = 1'b0;
@@ -962,6 +981,9 @@ module Controller(
 			 initial_head = 1'b0;
 			 game_reset = 1'b0;
 		  case(current_state)
+				LOGO:begin
+						inLogoDisplay = 1'b1;
+				end
 				INIT:begin
 					   game_reset = 1'b1;
 				end
