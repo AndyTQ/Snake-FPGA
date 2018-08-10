@@ -1,5 +1,3 @@
-// AUTHOR: Lim & Andy
-// Date: 8/10/2018
 module snake_top_level
 	(
 		CLOCK_50,						//	On Board 50 MHz

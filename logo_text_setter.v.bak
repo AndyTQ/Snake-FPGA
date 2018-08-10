@@ -1,0 +1,36 @@
+module logo_text_setter(
+ clk, inLogoDisplay,
+ x_pointer, y_pointer, logo_text);
+	input clk;
+	input inLogoDisplay;
+	input x_pointer;
+	input y_pointer;
+	input logo_text;
+	
+	reg [31:0] flash_counter;
+	
+	always@(posedge clk)
+	begin 
+		if (flash_counter == 0)
+			flash_counter <= 31'd49999999;
+	   else
+			 flash_counter <= flash_counter - 1'b1;
+	end
+	
+	wire enable_flash_text = (flash_counter < 25000000) ? 1 : 0;
+
+
+	//menu's normal text
+	always@(posedge clk)
+	begin
+		if (inLogoDisplay)
+			 begin
+			 if (logo_text)
+				 level_text <= 1'b1;
+			 else if
+				 level_text <= (enable_flash_text) ? 1 : 0;
+			 else
+				 level_text <= 1'b0;
+			 end
+	end
+	

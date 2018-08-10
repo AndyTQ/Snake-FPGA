@@ -1,5 +1,5 @@
 Analysis & Synthesis report for snake_top_level
-Mon Jul 30 16:55:37 2018
+Tue Aug 07 21:58:41 2018
 Quartus Prime Version 16.0.0 Build 211 04/27/2016 SJ Lite Edition
 
 
@@ -71,13 +71,13 @@ agreement for further details.
 +-------------------------------------------------------------------------------+
 ; Analysis & Synthesis Summary                                                  ;
 +---------------------------------+---------------------------------------------+
-; Analysis & Synthesis Status     ; Successful - Mon Jul 30 16:55:37 2018       ;
+; Analysis & Synthesis Status     ; Successful - Tue Aug 07 21:58:41 2018       ;
 ; Quartus Prime Version           ; 16.0.0 Build 211 04/27/2016 SJ Lite Edition ;
 ; Revision Name                   ; snake_top_level                             ;
 ; Top-level Entity Name           ; snake_top_level                             ;
 ; Family                          ; Cyclone V                                   ;
 ; Logic utilization (in ALMs)     ; N/A                                         ;
-; Total registers                 ; 2348                                        ;
+; Total registers                 ; 2352                                        ;
 ; Total pins                      ; 62                                          ;
 ; Total virtual pins              ; 0                                           ;
 ; Total block memory bits         ; 57,600                                      ;
@@ -204,6 +204,7 @@ Parallel compilation was disabled, but you have multiple processors available. E
 ; result_text_setter.v                 ; yes             ; User Verilog HDL File        ; D:/University/CSC258/Lab/Project_Final_Combined/result_text_setter.v                 ;         ;
 ; level_text_setter.v                  ; yes             ; User Verilog HDL File        ; D:/University/CSC258/Lab/Project_Final_Combined/level_text_setter.v                  ;         ;
 ; game_barrier_setter.v                ; yes             ; User Verilog HDL File        ; D:/University/CSC258/Lab/Project_Final_Combined/game_barrier_setter.v                ;         ;
+; logo_text_setter.v                   ; yes             ; User Verilog HDL File        ; D:/University/CSC258/Lab/Project_Final_Combined/logo_text_setter.v                   ;         ;
 ; altsyncram.tdf                       ; yes             ; Megafunction                 ; c:/altera_lite/16.0/quartus/libraries/megafunctions/altsyncram.tdf                   ;         ;
 ; stratix_ram_block.inc                ; yes             ; Megafunction                 ; c:/altera_lite/16.0/quartus/libraries/megafunctions/stratix_ram_block.inc            ;         ;
 ; lpm_mux.inc                          ; yes             ; Megafunction                 ; c:/altera_lite/16.0/quartus/libraries/megafunctions/lpm_mux.inc                      ;         ;
@@ -244,16 +245,16 @@ Parallel compilation was disabled, but you have multiple processors available. E
 +---------------------------------------------+----------------+
 ; Resource                                    ; Usage          ;
 +---------------------------------------------+----------------+
-; Estimate of Logic utilization (ALMs needed) ; 5983           ;
+; Estimate of Logic utilization (ALMs needed) ; 6086           ;
 ;                                             ;                ;
-; Combinational ALUT usage for logic          ; 9572           ;
-;     -- 7 input functions                    ; 71             ;
-;     -- 6 input functions                    ; 2061           ;
-;     -- 5 input functions                    ; 2519           ;
-;     -- 4 input functions                    ; 1407           ;
-;     -- <=3 input functions                  ; 3514           ;
+; Combinational ALUT usage for logic          ; 9814           ;
+;     -- 7 input functions                    ; 61             ;
+;     -- 6 input functions                    ; 2034           ;
+;     -- 5 input functions                    ; 2691           ;
+;     -- 4 input functions                    ; 1477           ;
+;     -- <=3 input functions                  ; 3551           ;
 ;                                             ;                ;
-; Dedicated logic registers                   ; 2348           ;
+; Dedicated logic registers                   ; 2352           ;
 ;                                             ;                ;
 ; I/O pins                                    ; 62             ;
 ; Total MLAB memory bits                      ; 0              ;
@@ -265,9 +266,9 @@ Parallel compilation was disabled, but you have multiple processors available. E
 ;     -- PLLs                                 ; 1              ;
 ;                                             ;                ;
 ; Maximum fan-out node                        ; CLOCK_50~input ;
-; Maximum fan-out                             ; 2264           ;
-; Total fan-out                               ; 48380          ;
-; Average fan-out                             ; 4.01           ;
+; Maximum fan-out                             ; 2267           ;
+; Total fan-out                               ; 49412          ;
+; Average fan-out                             ; 4.02           ;
 +---------------------------------------------+----------------+
 
 
@@ -276,12 +277,12 @@ Parallel compilation was disabled, but you have multiple processors available. E
 +---------------------------------------------------------+-------------------+--------------+-------------------+------------+------+--------------+--------------------------------------------------------------------------------------------------------------------------------------------------------+------------------------+--------------+
 ; Compilation Hierarchy Node                              ; LC Combinationals ; LC Registers ; Block Memory Bits ; DSP Blocks ; Pins ; Virtual Pins ; Full Hierarchy Name                                                                                                                                    ; Entity Name            ; Library Name ;
 +---------------------------------------------------------+-------------------+--------------+-------------------+------------+------+--------------+--------------------------------------------------------------------------------------------------------------------------------------------------------+------------------------+--------------+
-; |snake_top_level                                        ; 9572 (1)          ; 2348 (0)     ; 57600             ; 0          ; 62   ; 0            ; |snake_top_level                                                                                                                                       ; snake_top_level        ; work         ;
-;    |Controller:c0|                                      ; 14 (14)           ; 11 (11)      ; 0                 ; 0          ; 0    ; 0            ; |snake_top_level|Controller:c0                                                                                                                         ; Controller             ; work         ;
-;    |datapath:d0|                                        ; 9418 (5052)       ; 2234 (2035)  ; 0                 ; 0          ; 0    ; 0            ; |snake_top_level|datapath:d0                                                                                                                           ; datapath               ; work         ;
+; |snake_top_level                                        ; 9814 (1)          ; 2352 (0)     ; 57600             ; 0          ; 62   ; 0            ; |snake_top_level                                                                                                                                       ; snake_top_level        ; work         ;
+;    |Controller:c0|                                      ; 15 (15)           ; 13 (13)      ; 0                 ; 0          ; 0    ; 0            ; |snake_top_level|Controller:c0                                                                                                                         ; Controller             ; work         ;
+;    |datapath:d0|                                        ; 9655 (5044)       ; 2235 (2035)  ; 0                 ; 0          ; 0    ; 0            ; |snake_top_level|datapath:d0                                                                                                                           ; datapath               ; work         ;
 ;       |delay_counter:dc0|                               ; 7 (7)             ; 4 (4)        ; 0                 ; 0          ; 0    ; 0            ; |snake_top_level|datapath:d0|delay_counter:dc0                                                                                                         ; delay_counter          ; work         ;
 ;       |frame_updater:upd0|                              ; 28 (28)           ; 20 (20)      ; 0                 ; 0          ; 0    ; 0            ; |snake_top_level|datapath:d0|frame_updater:upd0                                                                                                        ; frame_updater          ; work         ;
-;       |game_barrier_setter:gamebar0|                    ; 2089 (2089)       ; 1 (1)        ; 0                 ; 0          ; 0    ; 0            ; |snake_top_level|datapath:d0|game_barrier_setter:gamebar0                                                                                              ; game_barrier_setter    ; work         ;
+;       |game_barrier_setter:gamebar0|                    ; 2055 (2055)       ; 1 (1)        ; 0                 ; 0          ; 0    ; 0            ; |snake_top_level|datapath:d0|game_barrier_setter:gamebar0                                                                                              ; game_barrier_setter    ; work         ;
 ;       |game_text_setter:gametxt0|                       ; 1277 (285)        ; 25 (25)      ; 0                 ; 0          ; 0    ; 0            ; |snake_top_level|datapath:d0|game_text_setter:gametxt0                                                                                                 ; game_text_setter       ; work         ;
 ;          |lpm_divide:Div0|                              ; 134 (0)           ; 0 (0)        ; 0                 ; 0          ; 0    ; 0            ; |snake_top_level|datapath:d0|game_text_setter:gametxt0|lpm_divide:Div0                                                                                 ; lpm_divide             ; work         ;
 ;             |lpm_divide_ibm:auto_generated|             ; 134 (0)           ; 0 (0)        ; 0                 ; 0          ; 0    ; 0            ; |snake_top_level|datapath:d0|game_text_setter:gametxt0|lpm_divide:Div0|lpm_divide_ibm:auto_generated                                                   ; lpm_divide_ibm         ; work         ;
@@ -315,15 +316,16 @@ Parallel compilation was disabled, but you have multiple processors available. E
 ;             |lpm_divide_l3m:auto_generated|             ; 135 (0)           ; 0 (0)        ; 0                 ; 0          ; 0    ; 0            ; |snake_top_level|datapath:d0|game_text_setter:gametxt0|lpm_divide:Mod3|lpm_divide_l3m:auto_generated                                                   ; lpm_divide_l3m         ; work         ;
 ;                |sign_div_unsign_olh:divider|            ; 135 (0)           ; 0 (0)        ; 0                 ; 0          ; 0    ; 0            ; |snake_top_level|datapath:d0|game_text_setter:gametxt0|lpm_divide:Mod3|lpm_divide_l3m:auto_generated|sign_div_unsign_olh:divider                       ; sign_div_unsign_olh    ; work         ;
 ;                   |alt_u_div_mve:divider|               ; 135 (135)         ; 0 (0)        ; 0                 ; 0          ; 0    ; 0            ; |snake_top_level|datapath:d0|game_text_setter:gametxt0|lpm_divide:Mod3|lpm_divide_l3m:auto_generated|sign_div_unsign_olh:divider|alt_u_div_mve:divider ; alt_u_div_mve          ; work         ;
-;       |level_text_setter:lvltxt0|                       ; 236 (236)         ; 34 (34)      ; 0                 ; 0          ; 0    ; 0            ; |snake_top_level|datapath:d0|level_text_setter:lvltxt0                                                                                                 ; level_text_setter      ; work         ;
-;       |menu_text_setter:menu0|                          ; 239 (239)         ; 33 (33)      ; 0                 ; 0          ; 0    ; 0            ; |snake_top_level|datapath:d0|menu_text_setter:menu0                                                                                                    ; menu_text_setter       ; work         ;
+;       |level_text_setter:lvltxt0|                       ; 235 (235)         ; 34 (34)      ; 0                 ; 0          ; 0    ; 0            ; |snake_top_level|datapath:d0|level_text_setter:lvltxt0                                                                                                 ; level_text_setter      ; work         ;
+;       |logo_text_setter:logo0|                          ; 279 (279)         ; 33 (33)      ; 0                 ; 0          ; 0    ; 0            ; |snake_top_level|datapath:d0|logo_text_setter:logo0                                                                                                    ; logo_text_setter       ; work         ;
+;       |menu_text_setter:menu0|                          ; 376 (376)         ; 1 (1)        ; 0                 ; 0          ; 0    ; 0            ; |snake_top_level|datapath:d0|menu_text_setter:menu0                                                                                                    ; menu_text_setter       ; work         ;
 ;       |props_updater:upd1|                              ; 60 (60)           ; 32 (32)      ; 0                 ; 0          ; 0    ; 0            ; |snake_top_level|datapath:d0|props_updater:upd1                                                                                                        ; props_updater          ; work         ;
 ;       |random_apple:rand1|                              ; 36 (36)           ; 15 (15)      ; 0                 ; 0          ; 0    ; 0            ; |snake_top_level|datapath:d0|random_apple:rand1                                                                                                        ; random_apple           ; work         ;
 ;       |random_choice:rand3|                             ; 4 (4)             ; 4 (4)        ; 0                 ; 0          ; 0    ; 0            ; |snake_top_level|datapath:d0|random_choice:rand3                                                                                                       ; random_choice          ; work         ;
 ;       |random_props:rand2|                              ; 27 (27)           ; 15 (15)      ; 0                 ; 0          ; 0    ; 0            ; |snake_top_level|datapath:d0|random_props:rand2                                                                                                        ; random_props           ; work         ;
 ;       |refresher:ref0|                                  ; 20 (20)           ; 15 (15)      ; 0                 ; 0          ; 0    ; 0            ; |snake_top_level|datapath:d0|refresher:ref0                                                                                                            ; refresher              ; work         ;
-;       |result_text_setter:restxt0|                      ; 343 (343)         ; 1 (1)        ; 0                 ; 0          ; 0    ; 0            ; |snake_top_level|datapath:d0|result_text_setter:restxt0                                                                                                ; result_text_setter     ; work         ;
-;    |kbInput:kbIn|                                       ; 77 (77)           ; 73 (73)      ; 0                 ; 0          ; 0    ; 0            ; |snake_top_level|kbInput:kbIn                                                                                                                          ; kbInput                ; work         ;
+;       |result_text_setter:restxt0|                      ; 207 (207)         ; 1 (1)        ; 0                 ; 0          ; 0    ; 0            ; |snake_top_level|datapath:d0|result_text_setter:restxt0                                                                                                ; result_text_setter     ; work         ;
+;    |kbInput:kbIn|                                       ; 81 (81)           ; 74 (74)      ; 0                 ; 0          ; 0    ; 0            ; |snake_top_level|kbInput:kbIn                                                                                                                          ; kbInput                ; work         ;
 ;    |vga_adapter:VGA|                                    ; 62 (1)            ; 30 (0)       ; 57600             ; 0          ; 0    ; 0            ; |snake_top_level|vga_adapter:VGA                                                                                                                       ; vga_adapter            ; work         ;
 ;       |altsyncram:VideoMemory|                          ; 9 (0)             ; 4 (0)        ; 57600             ; 0          ; 0    ; 0            ; |snake_top_level|vga_adapter:VGA|altsyncram:VideoMemory                                                                                                ; altsyncram             ; work         ;
 ;          |altsyncram_m6m1:auto_generated|               ; 9 (0)             ; 4 (4)        ; 57600             ; 0          ; 0    ; 0            ; |snake_top_level|vga_adapter:VGA|altsyncram:VideoMemory|altsyncram_m6m1:auto_generated                                                                 ; altsyncram_m6m1        ; work         ;
@@ -350,19 +352,21 @@ Note: For table entries with two numbers listed, the numbers in parentheses indi
 
 
 Encoding Type:  One-Hot
-+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-; State Machine - |snake_top_level|Controller:c0|current_state                                                                                                                                             ;
-+-----------------------------+-------------------------+----------------------+-------------------------+-------------------------+-----------------------------+--------------------+--------------------+
-; Name                        ; current_state.GAME_OVER ; current_state.INGAME ; current_state.GAME_WAIT ; current_state.GAME_INIT ; current_state.LEVEL_DISPLAY ; current_state.MENU ; current_state.INIT ;
-+-----------------------------+-------------------------+----------------------+-------------------------+-------------------------+-----------------------------+--------------------+--------------------+
-; current_state.INIT          ; 0                       ; 0                    ; 0                       ; 0                       ; 0                           ; 0                  ; 0                  ;
-; current_state.MENU          ; 0                       ; 0                    ; 0                       ; 0                       ; 0                           ; 1                  ; 1                  ;
-; current_state.LEVEL_DISPLAY ; 0                       ; 0                    ; 0                       ; 0                       ; 1                           ; 0                  ; 1                  ;
-; current_state.GAME_INIT     ; 0                       ; 0                    ; 0                       ; 1                       ; 0                           ; 0                  ; 1                  ;
-; current_state.GAME_WAIT     ; 0                       ; 0                    ; 1                       ; 0                       ; 0                           ; 0                  ; 1                  ;
-; current_state.INGAME        ; 0                       ; 1                    ; 0                       ; 0                       ; 0                           ; 0                  ; 1                  ;
-; current_state.GAME_OVER     ; 1                       ; 0                    ; 0                       ; 0                       ; 0                           ; 0                  ; 1                  ;
-+-----------------------------+-------------------------+----------------------+-------------------------+-------------------------+-----------------------------+--------------------+--------------------+
++-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+; State Machine - |snake_top_level|Controller:c0|current_state                                                                                                                                                                                              ;
++-----------------------------+----------------------+-------------------------+-------------------------+-----------------------------+--------------------+--------------------+--------------------+---------------------------+-------------------------+
+; Name                        ; current_state.INGAME ; current_state.GAME_WAIT ; current_state.GAME_INIT ; current_state.LEVEL_DISPLAY ; current_state.MENU ; current_state.INIT ; current_state.LOGO ; current_state.GLOBAL_WAIT ; current_state.GAME_OVER ;
++-----------------------------+----------------------+-------------------------+-------------------------+-----------------------------+--------------------+--------------------+--------------------+---------------------------+-------------------------+
+; current_state.GLOBAL_WAIT   ; 0                    ; 0                       ; 0                       ; 0                           ; 0                  ; 0                  ; 0                  ; 0                         ; 0                       ;
+; current_state.LOGO          ; 0                    ; 0                       ; 0                       ; 0                           ; 0                  ; 0                  ; 1                  ; 1                         ; 0                       ;
+; current_state.INIT          ; 0                    ; 0                       ; 0                       ; 0                           ; 0                  ; 1                  ; 0                  ; 1                         ; 0                       ;
+; current_state.MENU          ; 0                    ; 0                       ; 0                       ; 0                           ; 1                  ; 0                  ; 0                  ; 1                         ; 0                       ;
+; current_state.LEVEL_DISPLAY ; 0                    ; 0                       ; 0                       ; 1                           ; 0                  ; 0                  ; 0                  ; 1                         ; 0                       ;
+; current_state.GAME_INIT     ; 0                    ; 0                       ; 1                       ; 0                           ; 0                  ; 0                  ; 0                  ; 1                         ; 0                       ;
+; current_state.GAME_WAIT     ; 0                    ; 1                       ; 0                       ; 0                           ; 0                  ; 0                  ; 0                  ; 1                         ; 0                       ;
+; current_state.INGAME        ; 1                    ; 0                       ; 0                       ; 0                           ; 0                  ; 0                  ; 0                  ; 1                         ; 0                       ;
+; current_state.GAME_OVER     ; 0                    ; 0                       ; 0                       ; 0                           ; 0                  ; 0                  ; 0                  ; 1                         ; 1                       ;
++-----------------------------+----------------------+-------------------------+-------------------------+-----------------------------+--------------------+--------------------+--------------------+---------------------------+-------------------------+
 
 
 +--------------------------------------------------------------------------------------------------------------------------------------------+
@@ -373,6 +377,38 @@ Encoding Type:  One-Hot
 ; Controller:c0|main_difficulty[3]                               ; Stuck at GND due to stuck port data_in                                    ;
 ; kbInput:kbIn|previousCode[8..10]                               ; Stuck at GND due to stuck port data_in                                    ;
 ; kbInput:kbIn|number[0,4]                                       ; Stuck at GND due to stuck port data_in                                    ;
+; datapath:d0|menu_text_setter:menu0|flash_counter[31]           ; Merged with datapath:d0|logo_text_setter:logo0|flash_counter[31]          ;
+; datapath:d0|menu_text_setter:menu0|flash_counter[30]           ; Merged with datapath:d0|logo_text_setter:logo0|flash_counter[30]          ;
+; datapath:d0|menu_text_setter:menu0|flash_counter[29]           ; Merged with datapath:d0|logo_text_setter:logo0|flash_counter[29]          ;
+; datapath:d0|menu_text_setter:menu0|flash_counter[28]           ; Merged with datapath:d0|logo_text_setter:logo0|flash_counter[28]          ;
+; datapath:d0|menu_text_setter:menu0|flash_counter[27]           ; Merged with datapath:d0|logo_text_setter:logo0|flash_counter[27]          ;
+; datapath:d0|menu_text_setter:menu0|flash_counter[26]           ; Merged with datapath:d0|logo_text_setter:logo0|flash_counter[26]          ;
+; datapath:d0|menu_text_setter:menu0|flash_counter[25]           ; Merged with datapath:d0|logo_text_setter:logo0|flash_counter[25]          ;
+; datapath:d0|menu_text_setter:menu0|flash_counter[24]           ; Merged with datapath:d0|logo_text_setter:logo0|flash_counter[24]          ;
+; datapath:d0|menu_text_setter:menu0|flash_counter[23]           ; Merged with datapath:d0|logo_text_setter:logo0|flash_counter[23]          ;
+; datapath:d0|menu_text_setter:menu0|flash_counter[22]           ; Merged with datapath:d0|logo_text_setter:logo0|flash_counter[22]          ;
+; datapath:d0|menu_text_setter:menu0|flash_counter[21]           ; Merged with datapath:d0|logo_text_setter:logo0|flash_counter[21]          ;
+; datapath:d0|menu_text_setter:menu0|flash_counter[20]           ; Merged with datapath:d0|logo_text_setter:logo0|flash_counter[20]          ;
+; datapath:d0|menu_text_setter:menu0|flash_counter[19]           ; Merged with datapath:d0|logo_text_setter:logo0|flash_counter[19]          ;
+; datapath:d0|menu_text_setter:menu0|flash_counter[18]           ; Merged with datapath:d0|logo_text_setter:logo0|flash_counter[18]          ;
+; datapath:d0|menu_text_setter:menu0|flash_counter[17]           ; Merged with datapath:d0|logo_text_setter:logo0|flash_counter[17]          ;
+; datapath:d0|menu_text_setter:menu0|flash_counter[16]           ; Merged with datapath:d0|logo_text_setter:logo0|flash_counter[16]          ;
+; datapath:d0|menu_text_setter:menu0|flash_counter[15]           ; Merged with datapath:d0|logo_text_setter:logo0|flash_counter[15]          ;
+; datapath:d0|menu_text_setter:menu0|flash_counter[14]           ; Merged with datapath:d0|logo_text_setter:logo0|flash_counter[14]          ;
+; datapath:d0|menu_text_setter:menu0|flash_counter[13]           ; Merged with datapath:d0|logo_text_setter:logo0|flash_counter[13]          ;
+; datapath:d0|menu_text_setter:menu0|flash_counter[12]           ; Merged with datapath:d0|logo_text_setter:logo0|flash_counter[12]          ;
+; datapath:d0|menu_text_setter:menu0|flash_counter[11]           ; Merged with datapath:d0|logo_text_setter:logo0|flash_counter[11]          ;
+; datapath:d0|menu_text_setter:menu0|flash_counter[10]           ; Merged with datapath:d0|logo_text_setter:logo0|flash_counter[10]          ;
+; datapath:d0|menu_text_setter:menu0|flash_counter[9]            ; Merged with datapath:d0|logo_text_setter:logo0|flash_counter[9]           ;
+; datapath:d0|menu_text_setter:menu0|flash_counter[8]            ; Merged with datapath:d0|logo_text_setter:logo0|flash_counter[8]           ;
+; datapath:d0|menu_text_setter:menu0|flash_counter[7]            ; Merged with datapath:d0|logo_text_setter:logo0|flash_counter[7]           ;
+; datapath:d0|menu_text_setter:menu0|flash_counter[6]            ; Merged with datapath:d0|logo_text_setter:logo0|flash_counter[6]           ;
+; datapath:d0|menu_text_setter:menu0|flash_counter[5]            ; Merged with datapath:d0|logo_text_setter:logo0|flash_counter[5]           ;
+; datapath:d0|menu_text_setter:menu0|flash_counter[4]            ; Merged with datapath:d0|logo_text_setter:logo0|flash_counter[4]           ;
+; datapath:d0|menu_text_setter:menu0|flash_counter[3]            ; Merged with datapath:d0|logo_text_setter:logo0|flash_counter[3]           ;
+; datapath:d0|menu_text_setter:menu0|flash_counter[2]            ; Merged with datapath:d0|logo_text_setter:logo0|flash_counter[2]           ;
+; datapath:d0|menu_text_setter:menu0|flash_counter[1]            ; Merged with datapath:d0|logo_text_setter:logo0|flash_counter[1]           ;
+; datapath:d0|menu_text_setter:menu0|flash_counter[0]            ; Merged with datapath:d0|logo_text_setter:logo0|flash_counter[0]           ;
 ; datapath:d0|result_text_setter:restxt0|units_digit_score[3]    ; Merged with datapath:d0|game_text_setter:gametxt0|units_digit_score[3]    ;
 ; datapath:d0|result_text_setter:restxt0|units_digit_score[2]    ; Merged with datapath:d0|game_text_setter:gametxt0|units_digit_score[2]    ;
 ; datapath:d0|result_text_setter:restxt0|units_digit_score[1]    ; Merged with datapath:d0|game_text_setter:gametxt0|units_digit_score[1]    ;
@@ -389,8 +425,7 @@ Encoding Type:  One-Hot
 ; Controller:c0|current_state~2                                  ; Lost fanout                                                               ;
 ; Controller:c0|current_state~3                                  ; Lost fanout                                                               ;
 ; Controller:c0|current_state~4                                  ; Lost fanout                                                               ;
-; Controller:c0|current_state~5                                  ; Lost fanout                                                               ;
-; Total Number of Removed Registers = 23                         ;                                                                           ;
+; Total Number of Removed Registers = 54                         ;                                                                           ;
 +----------------------------------------------------------------+---------------------------------------------------------------------------+
 
 
@@ -399,12 +434,12 @@ Encoding Type:  One-Hot
 +----------------------------------------------+-------+
 ; Statistic                                    ; Value ;
 +----------------------------------------------+-------+
-; Total registers                              ; 2348  ;
+; Total registers                              ; 2352  ;
 ; Number of registers using Synchronous Clear  ; 2063  ;
 ; Number of registers using Synchronous Load   ; 87    ;
 ; Number of registers using Asynchronous Clear ; 20    ;
 ; Number of registers using Asynchronous Load  ; 0     ;
-; Number of registers using Clock Enable       ; 2083  ;
+; Number of registers using Clock Enable       ; 2084  ;
 ; Number of registers using Preset             ; 0     ;
 +----------------------------------------------+-------+
 
@@ -571,10 +606,9 @@ Encoding Type:  One-Hot
 ; 4:1                ; 11 bits   ; 22 LEs        ; 22 LEs               ; 0 LEs                  ; No         ; |snake_top_level|datapath:d0|score                                                                                 ;
 ; 4:1                ; 15 bits   ; 30 LEs        ; 30 LEs               ; 0 LEs                  ; No         ; |snake_top_level|datapath:d0|bonus_score_Y                                                                         ;
 ; 5:1                ; 15 bits   ; 45 LEs        ; 45 LEs               ; 0 LEs                  ; No         ; |snake_top_level|datapath:d0|negative_score_Y                                                                      ;
-; 3:1                ; 10 bits   ; 20 LEs        ; 0 LEs                ; 20 LEs                 ; Yes        ; |snake_top_level|vga_adapter:VGA|vga_controller:controller|yCounter[7]                                             ;
-; 6:1                ; 4 bits    ; 16 LEs        ; 12 LEs               ; 4 LEs                  ; Yes        ; |snake_top_level|kbInput:kbIn|direction[1]                                                                         ;
-; 3:1                ; 3 bits    ; 6 LEs         ; 6 LEs                ; 0 LEs                  ; No         ; |snake_top_level|vga_adapter:VGA|altsyncram:VideoMemory|altsyncram_m6m1:auto_generated|mux_ifb:mux3|result_node[1] ;
-; 3:1                ; 2 bits    ; 4 LEs         ; 4 LEs                ; 0 LEs                  ; No         ; |snake_top_level|Controller:c0|next_state                                                                          ;
+; 3:1                ; 10 bits   ; 20 LEs        ; 0 LEs                ; 20 LEs                 ; Yes        ; |snake_top_level|vga_adapter:VGA|vga_controller:controller|yCounter[6]                                             ;
+; 6:1                ; 4 bits    ; 16 LEs        ; 12 LEs               ; 4 LEs                  ; Yes        ; |snake_top_level|kbInput:kbIn|direction[2]                                                                         ;
+; 3:1                ; 3 bits    ; 6 LEs         ; 6 LEs                ; 0 LEs                  ; No         ; |snake_top_level|vga_adapter:VGA|altsyncram:VideoMemory|altsyncram_m6m1:auto_generated|mux_ifb:mux3|result_node[2] ;
 +--------------------+-----------+---------------+----------------------+------------------------+------------+--------------------------------------------------------------------------------------------------------------------+
 
 
@@ -1350,17 +1384,17 @@ Note: In order to hide this table in the UI and the text report file, please set
 +-----------------------+-----------------------------+
 ; Type                  ; Count                       ;
 +-----------------------+-----------------------------+
-; arriav_ff             ; 2348                        ;
+; arriav_ff             ; 2352                        ;
 ;     CLR SCLR          ; 10                          ;
-;     ENA               ; 102                         ;
+;     ENA               ; 103                         ;
 ;     ENA CLR SCLR      ; 10                          ;
 ;     ENA SCLR          ; 1917                        ;
 ;     ENA SCLR SLD      ; 45                          ;
 ;     ENA SLD           ; 9                           ;
 ;     SCLR              ; 81                          ;
 ;     SLD               ; 33                          ;
-;     plain             ; 141                         ;
-; arriav_lcell_comb     ; 9573                        ;
+;     plain             ; 144                         ;
+; arriav_lcell_comb     ; 9815                        ;
 ;     arith             ; 1804                        ;
 ;         0 data inputs ; 289                         ;
 ;         1 data inputs ; 962                         ;
@@ -1368,16 +1402,16 @@ Note: In order to hide this table in the UI and the text report file, please set
 ;         3 data inputs ; 268                         ;
 ;         4 data inputs ; 120                         ;
 ;         5 data inputs ; 3                           ;
-;     extend            ; 71                          ;
-;         7 data inputs ; 71                          ;
-;     normal            ; 7602                        ;
+;     extend            ; 61                          ;
+;         7 data inputs ; 61                          ;
+;     normal            ; 7854                        ;
 ;         0 data inputs ; 2                           ;
 ;         1 data inputs ; 15                          ;
-;         2 data inputs ; 1142                        ;
-;         3 data inputs ; 583                         ;
-;         4 data inputs ; 1283                        ;
-;         5 data inputs ; 2516                        ;
-;         6 data inputs ; 2061                        ;
+;         2 data inputs ; 1137                        ;
+;         3 data inputs ; 625                         ;
+;         4 data inputs ; 1353                        ;
+;         5 data inputs ; 2688                        ;
+;         6 data inputs ; 2034                        ;
 ;     shared            ; 96                          ;
 ;         0 data inputs ; 18                          ;
 ;         1 data inputs ; 56                          ;
@@ -1389,7 +1423,7 @@ Note: In order to hide this table in the UI and the text report file, please set
 ; stratixv_ram_block    ; 9                           ;
 ;                       ;                             ;
 ; Max LUT depth         ; 39.40                       ;
-; Average LUT depth     ; 15.39                       ;
+; Average LUT depth     ; 15.28                       ;
 +-----------------------+-----------------------------+
 
 
@@ -1398,7 +1432,7 @@ Note: In order to hide this table in the UI and the text report file, please set
 +----------------+--------------+
 ; Partition Name ; Elapsed Time ;
 +----------------+--------------+
-; Top            ; 00:01:24     ;
+; Top            ; 00:01:45     ;
 +----------------+--------------+
 
 
@@ -1408,7 +1442,7 @@ Note: In order to hide this table in the UI and the text report file, please set
 Info: *******************************************************************
 Info: Running Quartus Prime Analysis & Synthesis
     Info: Version 16.0.0 Build 211 04/27/2016 SJ Lite Edition
-    Info: Processing started: Mon Jul 30 16:53:44 2018
+    Info: Processing started: Tue Aug 07 21:56:30 2018
 Info: Command: quartus_map --read_settings_files=on --write_settings_files=off snake_top_level -c snake_top_level
 Warning (20028): Parallel compilation is not licensed and has been disabled
 Info (12021): Found 1 design units, including 1 entities, in source file menu_text_setter.v
@@ -1423,28 +1457,30 @@ Info (12021): Found 1 design units, including 1 entities, in source file vga_ada
     Info (12023): Found entity 1: vga_adapter File: D:/University/CSC258/Lab/Project_Final_Combined/vga_adapter/vga_adapter.v Line: 78
 Info (12021): Found 11 design units, including 11 entities, in source file snake_top_level.v
     Info (12023): Found entity 1: snake_top_level File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 1
-    Info (12023): Found entity 2: datapath File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 138
-    Info (12023): Found entity 3: random_apple File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 579
-    Info (12023): Found entity 4: random_props File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 610
-    Info (12023): Found entity 5: random_choice File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 640
-    Info (12023): Found entity 6: kbInput File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 666
-    Info (12023): Found entity 7: refresher File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 745
-    Info (12023): Found entity 8: frame_updater File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 776
-    Info (12023): Found entity 9: props_updater File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 799
-    Info (12023): Found entity 10: delay_counter File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 822
-    Info (12023): Found entity 11: Controller File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 846
+    Info (12023): Found entity 2: datapath File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 142
+    Info (12023): Found entity 3: random_apple File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 588
+    Info (12023): Found entity 4: random_props File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 619
+    Info (12023): Found entity 5: random_choice File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 649
+    Info (12023): Found entity 6: kbInput File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 675
+    Info (12023): Found entity 7: refresher File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 757
+    Info (12023): Found entity 8: frame_updater File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 788
+    Info (12023): Found entity 9: props_updater File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 811
+    Info (12023): Found entity 10: delay_counter File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 834
+    Info (12023): Found entity 11: Controller File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 858
 Info (12021): Found 1 design units, including 1 entities, in source file result_text_setter.v
     Info (12023): Found entity 1: result_text_setter File: D:/University/CSC258/Lab/Project_Final_Combined/result_text_setter.v Line: 1
 Info (12021): Found 1 design units, including 1 entities, in source file level_text_setter.v
     Info (12023): Found entity 1: level_text_setter File: D:/University/CSC258/Lab/Project_Final_Combined/level_text_setter.v Line: 1
 Info (12021): Found 1 design units, including 1 entities, in source file game_barrier_setter.v
     Info (12023): Found entity 1: game_barrier_setter File: D:/University/CSC258/Lab/Project_Final_Combined/game_barrier_setter.v Line: 1
-Warning (10236): Verilog HDL Implicit Net warning at snake_top_level.v(90): created implicit net for "game_reset" File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 90
-Warning (10236): Verilog HDL Implicit Net warning at snake_top_level.v(95): created implicit net for "inlevelDisplay" File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 95
-Warning (10236): Verilog HDL Implicit Net warning at snake_top_level.v(103): created implicit net for "initial_head" File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 103
-Warning (10236): Verilog HDL Implicit Net warning at snake_top_level.v(105): created implicit net for "finished_displaying_level" File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 105
-Warning (10236): Verilog HDL Implicit Net warning at snake_top_level.v(106): created implicit net for "continue_reset" File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 106
-Warning (10236): Verilog HDL Implicit Net warning at snake_top_level.v(107): created implicit net for "next_level" File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 107
+Info (12021): Found 1 design units, including 1 entities, in source file logo_text_setter.v
+    Info (12023): Found entity 1: logo_text_setter File: D:/University/CSC258/Lab/Project_Final_Combined/logo_text_setter.v Line: 1
+Warning (10236): Verilog HDL Implicit Net warning at snake_top_level.v(91): created implicit net for "game_reset" File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 91
+Warning (10236): Verilog HDL Implicit Net warning at snake_top_level.v(96): created implicit net for "inlevelDisplay" File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 96
+Warning (10236): Verilog HDL Implicit Net warning at snake_top_level.v(104): created implicit net for "initial_head" File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 104
+Warning (10236): Verilog HDL Implicit Net warning at snake_top_level.v(106): created implicit net for "finished_displaying_level" File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 106
+Warning (10236): Verilog HDL Implicit Net warning at snake_top_level.v(107): created implicit net for "continue_reset" File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 107
+Warning (10236): Verilog HDL Implicit Net warning at snake_top_level.v(108): created implicit net for "next_level" File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 108
 Info (12127): Elaborating entity "snake_top_level" for the top level hierarchy
 Warning (10034): Output port "LEDR[9..1]" at snake_top_level.v(39) has no driver File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 39
 Info (12128): Elaborating entity "vga_adapter" for hierarchy "vga_adapter:VGA" File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 68
@@ -1499,55 +1535,60 @@ Info (12021): Found 1 design units, including 1 entities, in source file db/altp
 Info (12128): Elaborating entity "altpll_80u" for hierarchy "vga_adapter:VGA|vga_pll:mypll|altpll:altpll_component|altpll_80u:auto_generated" File: c:/altera_lite/16.0/quartus/libraries/megafunctions/altpll.tdf Line: 898
 Info (12128): Elaborating entity "vga_controller" for hierarchy "vga_adapter:VGA|vga_controller:controller" File: D:/University/CSC258/Lab/Project_Final_Combined/vga_adapter/vga_adapter.v Line: 252
 Info (12128): Elaborating entity "kbInput" for hierarchy "kbInput:kbIn" File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 79
-Warning (10036): Verilog HDL or VHDL warning at snake_top_level.v(675): object "recordNext" assigned a value but never read File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 675
-Info (12128): Elaborating entity "datapath" for hierarchy "datapath:d0" File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 108
-Info (10264): Verilog HDL Case Statement information at snake_top_level.v(360): all case item expressions in this case statement are onehot File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 360
-Warning (10230): Verilog HDL assignment warning at snake_top_level.v(399): truncated value with size 32 to match size of target (7) File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 399
-Warning (10230): Verilog HDL assignment warning at snake_top_level.v(401): truncated value with size 32 to match size of target (8) File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 401
-Warning (10230): Verilog HDL assignment warning at snake_top_level.v(403): truncated value with size 32 to match size of target (7) File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 403
-Warning (10230): Verilog HDL assignment warning at snake_top_level.v(405): truncated value with size 32 to match size of target (8) File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 405
-Warning (10230): Verilog HDL assignment warning at snake_top_level.v(489): truncated value with size 32 to match size of target (13) File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 489
-Warning (10230): Verilog HDL assignment warning at snake_top_level.v(498): truncated value with size 32 to match size of target (13) File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 498
-Warning (10230): Verilog HDL assignment warning at snake_top_level.v(502): truncated value with size 32 to match size of target (13) File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 502
-Warning (10230): Verilog HDL assignment warning at snake_top_level.v(511): truncated value with size 32 to match size of target (7) File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 511
-Warning (10230): Verilog HDL assignment warning at snake_top_level.v(513): truncated value with size 32 to match size of target (13) File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 513
-Warning (10230): Verilog HDL assignment warning at snake_top_level.v(519): truncated value with size 32 to match size of target (4) File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 519
-Info (12128): Elaborating entity "refresher" for hierarchy "datapath:d0|refresher:ref0" File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 236
-Warning (10230): Verilog HDL assignment warning at snake_top_level.v(761): truncated value with size 32 to match size of target (8) File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 761
-Warning (10230): Verilog HDL assignment warning at snake_top_level.v(771): truncated value with size 32 to match size of target (7) File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 771
-Info (12128): Elaborating entity "frame_updater" for hierarchy "datapath:d0|frame_updater:upd0" File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 237
-Warning (10230): Verilog HDL assignment warning at snake_top_level.v(795): truncated value with size 32 to match size of target (1) File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 795
-Info (12128): Elaborating entity "props_updater" for hierarchy "datapath:d0|props_updater:upd1" File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 238
-Warning (10230): Verilog HDL assignment warning at snake_top_level.v(818): truncated value with size 32 to match size of target (1) File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 818
-Info (12128): Elaborating entity "delay_counter" for hierarchy "datapath:d0|delay_counter:dc0" File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 239
-Warning (10230): Verilog HDL assignment warning at snake_top_level.v(842): truncated value with size 32 to match size of target (1) File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 842
-Info (12128): Elaborating entity "random_apple" for hierarchy "datapath:d0|random_apple:rand1" File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 240
-Warning (10230): Verilog HDL assignment warning at snake_top_level.v(594): truncated value with size 32 to match size of target (8) File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 594
-Warning (10230): Verilog HDL assignment warning at snake_top_level.v(604): truncated value with size 32 to match size of target (7) File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 604
-Info (12128): Elaborating entity "random_props" for hierarchy "datapath:d0|random_props:rand2" File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 241
-Warning (10230): Verilog HDL assignment warning at snake_top_level.v(625): truncated value with size 32 to match size of target (8) File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 625
-Warning (10230): Verilog HDL assignment warning at snake_top_level.v(635): truncated value with size 32 to match size of target (7) File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 635
-Info (12128): Elaborating entity "random_choice" for hierarchy "datapath:d0|random_choice:rand3" File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 242
-Info (12128): Elaborating entity "menu_text_setter" for hierarchy "datapath:d0|menu_text_setter:menu0" File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 243
+Warning (10036): Verilog HDL or VHDL warning at snake_top_level.v(685): object "recordNext" assigned a value but never read File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 685
+Info (12128): Elaborating entity "datapath" for hierarchy "datapath:d0" File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 110
+Info (10264): Verilog HDL Case Statement information at snake_top_level.v(366): all case item expressions in this case statement are onehot File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 366
+Warning (10230): Verilog HDL assignment warning at snake_top_level.v(405): truncated value with size 32 to match size of target (7) File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 405
+Warning (10230): Verilog HDL assignment warning at snake_top_level.v(407): truncated value with size 32 to match size of target (8) File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 407
+Warning (10230): Verilog HDL assignment warning at snake_top_level.v(409): truncated value with size 32 to match size of target (7) File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 409
+Warning (10230): Verilog HDL assignment warning at snake_top_level.v(411): truncated value with size 32 to match size of target (8) File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 411
+Warning (10230): Verilog HDL assignment warning at snake_top_level.v(495): truncated value with size 32 to match size of target (13) File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 495
+Warning (10230): Verilog HDL assignment warning at snake_top_level.v(504): truncated value with size 32 to match size of target (13) File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 504
+Warning (10230): Verilog HDL assignment warning at snake_top_level.v(508): truncated value with size 32 to match size of target (13) File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 508
+Warning (10230): Verilog HDL assignment warning at snake_top_level.v(517): truncated value with size 32 to match size of target (7) File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 517
+Warning (10230): Verilog HDL assignment warning at snake_top_level.v(519): truncated value with size 32 to match size of target (13) File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 519
+Warning (10230): Verilog HDL assignment warning at snake_top_level.v(525): truncated value with size 32 to match size of target (4) File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 525
+Info (12128): Elaborating entity "refresher" for hierarchy "datapath:d0|refresher:ref0" File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 241
+Warning (10230): Verilog HDL assignment warning at snake_top_level.v(773): truncated value with size 32 to match size of target (8) File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 773
+Warning (10230): Verilog HDL assignment warning at snake_top_level.v(783): truncated value with size 32 to match size of target (7) File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 783
+Info (12128): Elaborating entity "frame_updater" for hierarchy "datapath:d0|frame_updater:upd0" File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 242
+Warning (10230): Verilog HDL assignment warning at snake_top_level.v(807): truncated value with size 32 to match size of target (1) File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 807
+Info (12128): Elaborating entity "props_updater" for hierarchy "datapath:d0|props_updater:upd1" File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 243
+Warning (10230): Verilog HDL assignment warning at snake_top_level.v(830): truncated value with size 32 to match size of target (1) File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 830
+Info (12128): Elaborating entity "delay_counter" for hierarchy "datapath:d0|delay_counter:dc0" File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 244
+Warning (10230): Verilog HDL assignment warning at snake_top_level.v(854): truncated value with size 32 to match size of target (1) File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 854
+Info (12128): Elaborating entity "random_apple" for hierarchy "datapath:d0|random_apple:rand1" File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 245
+Warning (10230): Verilog HDL assignment warning at snake_top_level.v(603): truncated value with size 32 to match size of target (8) File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 603
+Warning (10230): Verilog HDL assignment warning at snake_top_level.v(613): truncated value with size 32 to match size of target (7) File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 613
+Info (12128): Elaborating entity "random_props" for hierarchy "datapath:d0|random_props:rand2" File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 246
+Warning (10230): Verilog HDL assignment warning at snake_top_level.v(634): truncated value with size 32 to match size of target (8) File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 634
+Warning (10230): Verilog HDL assignment warning at snake_top_level.v(644): truncated value with size 32 to match size of target (7) File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 644
+Info (12128): Elaborating entity "random_choice" for hierarchy "datapath:d0|random_choice:rand3" File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 247
+Info (12128): Elaborating entity "logo_text_setter" for hierarchy "datapath:d0|logo_text_setter:logo0" File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 248
+Warning (10230): Verilog HDL assignment warning at logo_text_setter.v(18): truncated value with size 32 to match size of target (1) File: D:/University/CSC258/Lab/Project_Final_Combined/logo_text_setter.v Line: 18
+Warning (10230): Verilog HDL assignment warning at logo_text_setter.v(29): truncated value with size 32 to match size of target (1) File: D:/University/CSC258/Lab/Project_Final_Combined/logo_text_setter.v Line: 29
+Info (12128): Elaborating entity "menu_text_setter" for hierarchy "datapath:d0|menu_text_setter:menu0" File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 249
 Warning (10230): Verilog HDL assignment warning at menu_text_setter.v(18): truncated value with size 32 to match size of target (1) File: D:/University/CSC258/Lab/Project_Final_Combined/menu_text_setter.v Line: 18
 Warning (10230): Verilog HDL assignment warning at menu_text_setter.v(234): truncated value with size 32 to match size of target (1) File: D:/University/CSC258/Lab/Project_Final_Combined/menu_text_setter.v Line: 234
 Warning (12125): Using design file game_text_setter.v, which is not specified as a design file for the current project, but contains definitions for 1 design units and 1 entities in project
     Info (12023): Found entity 1: game_text_setter File: D:/University/CSC258/Lab/Project_Final_Combined/game_text_setter.v Line: 1
-Info (12128): Elaborating entity "game_text_setter" for hierarchy "datapath:d0|game_text_setter:gametxt0" File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 244
+Info (12128): Elaborating entity "game_text_setter" for hierarchy "datapath:d0|game_text_setter:gametxt0" File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 250
 Warning (10230): Verilog HDL assignment warning at game_text_setter.v(21): truncated value with size 32 to match size of target (4) File: D:/University/CSC258/Lab/Project_Final_Combined/game_text_setter.v Line: 21
 Warning (10230): Verilog HDL assignment warning at game_text_setter.v(22): truncated value with size 32 to match size of target (4) File: D:/University/CSC258/Lab/Project_Final_Combined/game_text_setter.v Line: 22
 Warning (10230): Verilog HDL assignment warning at game_text_setter.v(23): truncated value with size 32 to match size of target (4) File: D:/University/CSC258/Lab/Project_Final_Combined/game_text_setter.v Line: 23
 Warning (10230): Verilog HDL assignment warning at game_text_setter.v(25): truncated value with size 32 to match size of target (4) File: D:/University/CSC258/Lab/Project_Final_Combined/game_text_setter.v Line: 25
 Warning (10230): Verilog HDL assignment warning at game_text_setter.v(26): truncated value with size 32 to match size of target (4) File: D:/University/CSC258/Lab/Project_Final_Combined/game_text_setter.v Line: 26
 Warning (10230): Verilog HDL assignment warning at game_text_setter.v(27): truncated value with size 32 to match size of target (4) File: D:/University/CSC258/Lab/Project_Final_Combined/game_text_setter.v Line: 27
-Info (12128): Elaborating entity "result_text_setter" for hierarchy "datapath:d0|result_text_setter:restxt0" File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 245
+Info (12128): Elaborating entity "result_text_setter" for hierarchy "datapath:d0|result_text_setter:restxt0" File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 251
 Warning (10230): Verilog HDL assignment warning at result_text_setter.v(15): truncated value with size 32 to match size of target (4) File: D:/University/CSC258/Lab/Project_Final_Combined/result_text_setter.v Line: 15
 Warning (10230): Verilog HDL assignment warning at result_text_setter.v(16): truncated value with size 32 to match size of target (4) File: D:/University/CSC258/Lab/Project_Final_Combined/result_text_setter.v Line: 16
 Warning (10230): Verilog HDL assignment warning at result_text_setter.v(17): truncated value with size 32 to match size of target (4) File: D:/University/CSC258/Lab/Project_Final_Combined/result_text_setter.v Line: 17
-Info (12128): Elaborating entity "level_text_setter" for hierarchy "datapath:d0|level_text_setter:lvltxt0" File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 246
+Info (12128): Elaborating entity "level_text_setter" for hierarchy "datapath:d0|level_text_setter:lvltxt0" File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 252
 Warning (10230): Verilog HDL assignment warning at level_text_setter.v(24): truncated value with size 32 to match size of target (1) File: D:/University/CSC258/Lab/Project_Final_Combined/level_text_setter.v Line: 24
-Info (12128): Elaborating entity "game_barrier_setter" for hierarchy "datapath:d0|game_barrier_setter:gamebar0" File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 247
-Info (12128): Elaborating entity "Controller" for hierarchy "Controller:c0" File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 132
+Info (12128): Elaborating entity "game_barrier_setter" for hierarchy "datapath:d0|game_barrier_setter:gamebar0" File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 253
+Info (12128): Elaborating entity "Controller" for hierarchy "Controller:c0" File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 136
+Warning (10270): Verilog HDL Case Statement warning at snake_top_level.v(983): incomplete case statement has no default case item File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 983
+Info (10264): Verilog HDL Case Statement information at snake_top_level.v(983): all case item expressions in this case statement are onehot File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 983
 Info (278001): Inferred 8 megafunctions from design logic
     Info (278004): Inferred divider/modulo megafunction ("lpm_divide") from the following logic: "datapath:d0|game_text_setter:gametxt0|Mod2" File: D:/University/CSC258/Lab/Project_Final_Combined/game_text_setter.v Line: 25
     Info (278004): Inferred divider/modulo megafunction ("lpm_divide") from the following logic: "datapath:d0|game_text_setter:gametxt0|Div2" File: D:/University/CSC258/Lab/Project_Final_Combined/game_text_setter.v Line: 26
@@ -1614,7 +1655,7 @@ Warning (13024): Output pins are stuck at VCC or GND
     Warning (13410): Pin "LEDR[9]" is stuck at GND File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 39
     Warning (13410): Pin "VGA_SYNC_N" is stuck at VCC File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 35
 Info (286030): Timing-Driven Synthesis is running
-Info (17049): 4 registers lost all their fanouts during netlist optimizations.
+Info (17049): 3 registers lost all their fanouts during netlist optimizations.
 Info (144001): Generated suppressed messages file D:/University/CSC258/Lab/Project_Final_Combined/output_files/snake_top_level.map.smsg
 Info (16010): Generating hard_block partition "hard_block:auto_generated_inst"
     Info (16011): Adding 5 node(s), including 0 DDIO, 1 PLL, 0 transceiver and 0 LCELL
@@ -1634,17 +1675,17 @@ Warning (21074): Design contains 13 input pin(s) that do not drive logic
     Warning (15610): No output dependent on input pin "SW[7]" File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 24
     Warning (15610): No output dependent on input pin "SW[8]" File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 24
     Warning (15610): No output dependent on input pin "SW[9]" File: D:/University/CSC258/Lab/Project_Final_Combined/snake_top_level.v Line: 24
-Info (21057): Implemented 11735 device resources after synthesis - the final resource count might be different
+Info (21057): Implemented 11979 device resources after synthesis - the final resource count might be different
     Info (21058): Implemented 17 input pins
     Info (21059): Implemented 45 output pins
-    Info (21061): Implemented 11663 logic cells
+    Info (21061): Implemented 11907 logic cells
     Info (21064): Implemented 9 RAM segments
     Info (21065): Implemented 1 PLLs
-Info: Quartus Prime Analysis & Synthesis was successful. 0 errors, 68 warnings
-    Info: Peak virtual memory: 5195 megabytes
-    Info: Processing ended: Mon Jul 30 16:55:37 2018
-    Info: Elapsed time: 00:01:53
-    Info: Total CPU time (on all processors): 00:01:59
+Info: Quartus Prime Analysis & Synthesis was successful. 0 errors, 71 warnings
+    Info: Peak virtual memory: 5203 megabytes
+    Info: Processing ended: Tue Aug 07 21:58:41 2018
+    Info: Elapsed time: 00:02:11
+    Info: Total CPU time (on all processors): 00:02:28
 
 
 +------------------------------------------+

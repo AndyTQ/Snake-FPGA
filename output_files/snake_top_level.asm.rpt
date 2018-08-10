@@ -1,5 +1,5 @@
 Assembler report for snake_top_level
-Mon Jul 30 16:59:53 2018
+Tue Aug 07 22:03:45 2018
 Quartus Prime Version 16.0.0 Build 211 04/27/2016 SJ Lite Edition
 
 
@@ -38,7 +38,7 @@ agreement for further details.
 +---------------------------------------------------------------+
 ; Assembler Summary                                             ;
 +-----------------------+---------------------------------------+
-; Assembler Status      ; Successful - Mon Jul 30 16:59:53 2018 ;
+; Assembler Status      ; Successful - Tue Aug 07 22:03:45 2018 ;
 ; Revision Name         ; snake_top_level                       ;
 ; Top-level Entity Name ; snake_top_level                       ;
 ; Family                ; Cyclone V                             ;
@@ -68,8 +68,8 @@ agreement for further details.
 ; Option         ; Setting                                                                                   ;
 +----------------+-------------------------------------------------------------------------------------------+
 ; Device         ; 5CSEMA5F31C6                                                                              ;
-; JTAG usercode  ; 0x01A3AA9D                                                                                ;
-; Checksum       ; 0x01A3AA9D                                                                                ;
+; JTAG usercode  ; 0x01A9D7B7                                                                                ;
+; Checksum       ; 0x01A9D7B7                                                                                ;
 +----------------+-------------------------------------------------------------------------------------------+
 
 
@@ -79,13 +79,13 @@ agreement for further details.
 Info: *******************************************************************
 Info: Running Quartus Prime Assembler
     Info: Version 16.0.0 Build 211 04/27/2016 SJ Lite Edition
-    Info: Processing started: Mon Jul 30 16:59:42 2018
+    Info: Processing started: Tue Aug 07 22:03:33 2018
 Info: Command: quartus_asm --read_settings_files=off --write_settings_files=off snake_top_level -c snake_top_level
 Info (115030): Assembler is generating device programming files
 Info: Quartus Prime Assembler was successful. 0 errors, 0 warnings
-    Info: Peak virtual memory: 5113 megabytes
-    Info: Processing ended: Mon Jul 30 16:59:53 2018
-    Info: Elapsed time: 00:00:11
-    Info: Total CPU time (on all processors): 00:00:11
+    Info: Peak virtual memory: 5118 megabytes
+    Info: Processing ended: Tue Aug 07 22:03:45 2018
+    Info: Elapsed time: 00:00:12
+    Info: Total CPU time (on all processors): 00:00:12
 
 

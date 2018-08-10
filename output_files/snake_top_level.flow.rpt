@@ -1,5 +1,5 @@
 Flow report for snake_top_level
-Mon Jul 30 17:00:37 2018
+Tue Aug 07 22:04:37 2018
 Quartus Prime Version 16.0.0 Build 211 04/27/2016 SJ Lite Edition
 
 
@@ -41,15 +41,15 @@ agreement for further details.
 +-------------------------------------------------------------------------------+
 ; Flow Summary                                                                  ;
 +---------------------------------+---------------------------------------------+
-; Flow Status                     ; Successful - Mon Jul 30 17:00:37 2018       ;
+; Flow Status                     ; Successful - Tue Aug 07 22:04:37 2018       ;
 ; Quartus Prime Version           ; 16.0.0 Build 211 04/27/2016 SJ Lite Edition ;
 ; Revision Name                   ; snake_top_level                             ;
 ; Top-level Entity Name           ; snake_top_level                             ;
 ; Family                          ; Cyclone V                                   ;
 ; Device                          ; 5CSEMA5F31C6                                ;
 ; Timing Models                   ; Final                                       ;
-; Logic utilization (in ALMs)     ; 6,027 / 32,070 ( 19 % )                     ;
-; Total registers                 ; 2927                                        ;
+; Logic utilization (in ALMs)     ; 6,172 / 32,070 ( 19 % )                     ;
+; Total registers                 ; 2936                                        ;
 ; Total pins                      ; 62 / 457 ( 14 % )                           ;
 ; Total virtual pins              ; 0                                           ;
 ; Total block memory bits         ; 57,600 / 4,065,280 ( 1 % )                  ;
@@ -68,7 +68,7 @@ agreement for further details.
 +-------------------+---------------------+
 ; Option            ; Setting             ;
 +-------------------+---------------------+
-; Start date & time ; 07/30/2018 16:53:44 ;
+; Start date & time ; 08/07/2018 21:56:30 ;
 ; Main task         ; Compilation         ;
 ; Revision Name     ; snake_top_level     ;
 +-------------------+---------------------+
@@ -79,7 +79,7 @@ agreement for further details.
 +-------------------------------------+---------------------------------------+---------------+-------------+----------------+
 ; Assignment Name                     ; Value                                 ; Default Value ; Entity Name ; Section Id     ;
 +-------------------------------------+---------------------------------------+---------------+-------------+----------------+
-; COMPILER_SIGNATURE_ID               ; 154027277981889.153298402418372       ; --            ; --          ; --             ;
+; COMPILER_SIGNATURE_ID               ; 154027277981889.153369339012576       ; --            ; --          ; --             ;
 ; EDA_OUTPUT_DATA_FORMAT              ; Verilog Hdl                           ; --            ; --          ; eda_simulation ;
 ; EDA_SIMULATION_TOOL                 ; ModelSim-Altera (Verilog)             ; <None>        ; --          ; --             ;
 ; EDA_TIME_SCALE                      ; 1 ps                                  ; --            ; --          ; eda_simulation ;
@@ -99,12 +99,12 @@ agreement for further details.
 +---------------------------+--------------+-------------------------+---------------------+------------------------------------+
 ; Module Name               ; Elapsed Time ; Average Processors Used ; Peak Virtual Memory ; Total CPU Time (on all processors) ;
 +---------------------------+--------------+-------------------------+---------------------+------------------------------------+
-; Analysis & Synthesis      ; 00:01:52     ; 1.0                     ; 5195 MB             ; 00:01:58                           ;
-; Fitter                    ; 00:03:59     ; 1.0                     ; 6451 MB             ; 00:05:51                           ;
-; Assembler                 ; 00:00:11     ; 1.0                     ; 5113 MB             ; 00:00:11                           ;
-; TimeQuest Timing Analyzer ; 00:00:37     ; 1.0                     ; 5507 MB             ; 00:00:36                           ;
-; EDA Netlist Writer        ; 00:00:05     ; 1.0                     ; 5187 MB             ; 00:00:05                           ;
-; Total                     ; 00:06:44     ; --                      ; --                  ; 00:08:41                           ;
+; Analysis & Synthesis      ; 00:02:10     ; 1.0                     ; 5203 MB             ; 00:02:26                           ;
+; Fitter                    ; 00:04:45     ; 1.0                     ; 6464 MB             ; 00:06:29                           ;
+; Assembler                 ; 00:00:12     ; 1.0                     ; 5118 MB             ; 00:00:12                           ;
+; TimeQuest Timing Analyzer ; 00:00:44     ; 1.0                     ; 5511 MB             ; 00:00:43                           ;
+; EDA Netlist Writer        ; 00:00:06     ; 1.0                     ; 5195 MB             ; 00:00:06                           ;
+; Total                     ; 00:07:57     ; --                      ; --                  ; 00:09:56                           ;
 +---------------------------+--------------+-------------------------+---------------------+------------------------------------+
 
 
