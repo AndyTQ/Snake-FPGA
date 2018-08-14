@@ -1,3 +1,18 @@
+////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////
+/////////////////////////CSC258 Project: The Snake//////////////////////
+////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////
+//Author: Wei Cong, Tianquan Di
+//Date: Aug 13, 2018
+//FPGA: Altera DE1-SoC
+
+
+//Top level module
 module snake_top_level
 	(
 		CLOCK_50,						//	On Board 50 MHz
@@ -70,22 +85,34 @@ module snake_top_level
 		defparam VGA.MONOCHROME = "FALSE";
 		defparam VGA.BITS_PER_COLOUR_CHANNEL = 1;
 		defparam VGA.BACKGROUND_IMAGE = "black.mif";
+		
 	 //direction wire
 	 wire [4:0] direction;
+	 wire release_up, release_down, enter;
+	 
+	 //number selections from keyboard
 	 wire [4:0] number;
+	 
+	 //key listeners
 	 wire direction_touched, any_touched;
-
+	 
+    //game reset
 	 wire reset_n;
-	 kbInput kbIn(CLOCK_50, initial_game, PS2_CLK,direction,PS2_DAT,reset_n, number, direction_touched, any_touched);
-	 
-	 
+	  
+	 //game states wire
+	 wire inLevelChooser;
 	 wire inmenu;
 	 wire ingame;
 	 wire inLogoDisplay;
 	 wire inresult, game_over;
 	 wire initial_game, allow_moving;
+	 wire choose_initial_level;
 	 wire [3:0]main_difficulty;
 	 
+	 // keyboard module
+	 kbInput kbIn(CLOCK_50, initial_game, PS2_CLK,direction,PS2_DAT,reset_n, number, direction_touched, any_touched, release_up, release_down , enter);
+	
+	 // main datapath
 	 datapath d0(
 	         .clk(CLOCK_50),
 				.game_reset(game_reset),
@@ -99,21 +126,26 @@ module snake_top_level
 				.x_pointer(x),
 				.y_pointer(y),
 				.main_difficulty(main_difficulty),
-				//delete later
 				.initial_game(initial_game),
 				.initial_head(initial_head),
 				.allow_moving(allow_moving),
 				.finished_displaying_level(finished_displaying_level),
 				.continue_reset(continue_reset),
 				.next_level(next_level),
-				.inLogoDisplay(inLogoDisplay)
+				.inLogoDisplay(inLogoDisplay),
+				.release_up(release_up),
+				.release_down(release_down),
+				.enter(enter),
+				.inLevelChooser(inLevelChooser),
+				.choose_initial_level(choose_initial_level)
 	 );
 	 
 
-	 
+	 // main controller
 	 Controller c0(
 				.reset_n(reset_n),
 				.game_reset(game_reset),
+				.level_chosen(enter),
 				.clk(CLOCK_50),
 				.number_input(number),
 				.direction(direction),
@@ -122,6 +154,7 @@ module snake_top_level
 				.ingame(ingame),
 				.inresult(inresult),
 				.inlevelDisplay(inlevelDisplay),
+				.inLevelChooser(inLevelChooser),
 				.main_difficulty(main_difficulty),
 				.finished_displaying_level(finished_displaying_level),
 				.initial_game(initial_game),
@@ -132,7 +165,8 @@ module snake_top_level
 				.continue_reset(continue_reset),
 				.direction_touched(direction_touched),
 				.inLogoDisplay(inLogoDisplay),
-				.any_touched(any_touched)
+				.any_touched(any_touched),
+				.choose_initial_level(choose_initial_level)
 	 );
 	 
 	 
@@ -150,8 +184,12 @@ module datapath(
 	output finished_displaying_level,
 	output reg next_level,
 	input [4:0] direction,
+	input [4:0] release_direction,
 	
-	input initial_game, allow_moving, initial_head,
+	//signals for initialization of game
+	input initial_game,
+	input allow_moving,
+	input initial_head,
 	
 	//status of game
    input inmenu,
@@ -159,6 +197,13 @@ module datapath(
 	input inresult,
 	input inlevelDisplay,
 	input inLogoDisplay,
+	input inLevelChooser,
+	input choose_initial_level,
+	
+	//inputs for level chooser
+	input release_up,
+	input release_down,
+	input enter,
 
 	output [2:0] RGB // the colour used for output);
    );
@@ -171,8 +216,9 @@ module datapath(
 	
 	
 	wire menu_text; // check if the pixel is the menu's text.
-	wire game_text, result_text, level_text, logo_text;
-	
+	wire game_text, result_text, level_text, logo_text, chooser_text; //more texts.
+	wire [3:0] level_chosen; //the chosen level
+
 	//register for score
 	reg [12:0] score;
 	
@@ -192,8 +238,8 @@ module datapath(
 	
 	//registers for snake
 	reg [6:0] size;
-	reg [7:0] snake_X[0:127];
-	reg [6:0] snake_Y[0:127];
+	reg [7:0] snake_X[0:1023];
+	reg [6:0] snake_Y[0:1023];
 	reg found;
 	reg found_collidable_body;
 	reg snakeHead;
@@ -204,6 +250,8 @@ module datapath(
 	
 	reg [1:0]currentDirect;
 	integer bodycounter, bodycounter2, bodycounter3, bodycounter4;
+	
+	//register for current direction
 	reg up,down,left,right;
 	
 	//registers for apple
@@ -222,6 +270,8 @@ module datapath(
 	reg [6:0] negative_score_Y;
 	
 	reg apple_inX, apple_inY;
+	
+	//random generators
 	wire [7:0]rand_apple_X;
 	wire [6:0]rand_apple_Y;
 	
@@ -234,8 +284,6 @@ module datapath(
 	//registers for game status
 	reg lethal, nonLethal;
 	reg bad_collision, good_collision;
-	
-	
 	
 	//down level modules
 	refresher ref0(clk, x_pointer, y_pointer);
@@ -251,25 +299,31 @@ module datapath(
 	result_text_setter restxt0(clk, score, inresult, main_difficulty, x_pointer, y_pointer, result_text);
 	level_text_setter lvltxt0(clk, game_reset, inlevelDisplay, current_level, main_difficulty, x_pointer, y_pointer, level_text, finished_displaying_level);
 	game_barrier_setter gamebar0(clk, ingame, current_level, x_pointer, y_pointer, barrier);
+	level_chooser lvlchoose0(clk, inLevelChooser, release_up, release_down, enter, x_pointer, y_pointer, chooser_text, level_chosen);
+	
 	// check if the pixel is the menu's text.
-	
-	
-
 	
 	always@(posedge clk)
 	begin
+      
 		if(game_reset) begin
 			score = 0;
 			current_level = 0;
 			next_level = 0;
 		end
+		
 		if(continue_reset) begin
 			score = 0;
 			next_level = 0;
 		end
+		
+		if(choose_initial_level) begin
+			current_level = level_chosen;
+		end
+		
 		if(initial_game) begin
 			//initialize snake's position
-			for(bodycounter3 = 1; bodycounter3 <= 127; bodycounter3 = bodycounter3+1)begin
+			for(bodycounter3 = 1; bodycounter3 <= 1023; bodycounter3 = bodycounter3+1)begin
 				snake_X[bodycounter3] = 0;
 				snake_Y[bodycounter3] = 0;
 			end
@@ -292,8 +346,6 @@ module datapath(
 			down = 0;
 			left = 0;
 			right = 0;
-			
-
 		end
 		
 		else if(ingame)begin
@@ -303,7 +355,8 @@ module datapath(
 								||((x_pointer >= 155)&& (x_pointer <= 157)&&(y_pointer >= 2) && (y_pointer <=112))
 								||((x_pointer >= 2) && (x_pointer <= 157)&&(y_pointer >= 2) && (y_pointer <= 4))
 								||((x_pointer >= 2) && (x_pointer <= 157)&&(y_pointer >= 110) && (y_pointer <= 112)));
-				
+
+
 				border_collision <= (((x_pointer >= 0) && (x_pointer <= 3)&&(y_pointer >= 2) && (y_pointer <=112))
 								||((x_pointer >= 155)&& (x_pointer <= 159)&&(y_pointer >= 2) && (y_pointer <=112))
 								||((x_pointer >= 2) && (x_pointer <= 157)&&(y_pointer >= 0) && (y_pointer <= 3))
@@ -334,9 +387,6 @@ module datapath(
 					end
 				end
 				
-								
-			 
-				
 				//Add Snake head
 				snakeHead = (x_pointer >= snake_X[0] && x_pointer <= (snake_X[0]+2))
 								&& (y_pointer >= snake_Y[0] && y_pointer <= (snake_Y[0]+2));
@@ -350,13 +400,9 @@ module datapath(
 					snake_X[0] = 8;
 				end
 				
-				
-					
-				
-				
 				//update snake's position
 				if(delayed_clk)begin
-					for(bodycounter2 = 127; bodycounter2 > 0; bodycounter2 = bodycounter2 - 1)begin
+					for(bodycounter2 = 1023; bodycounter2 > 0; bodycounter2 = bodycounter2 - 1)begin
 							if(bodycounter2 <= size - 1)begin
 								snake_X[bodycounter2] = snake_X[bodycounter2 - 1];
 								snake_Y[bodycounter2] = snake_Y[bodycounter2 - 1];
@@ -364,6 +410,7 @@ module datapath(
 					end
 					//update snake's direction
 						case(direction)
+						   //To avoid unstable situation, we split bits into FIVE!
 							//UP
 							5'b00010: if(!down)begin
 												up = 1;
@@ -384,20 +431,20 @@ module datapath(
 												down = 1;
 												left = 0;
 												right = 0;
-										end 
+										 end 
 							//RIGHT
 							5'b10000: if(!left)begin
 												up = 0;
 												down = 0;
 												left = 0;
 												right = 1;
-										end
+										 end
 							default: begin //maintain
 											up = up;
 											down = down;
 											left = left;
 											right = right;
-										end
+										 end
 							endcase	
 	
 					if (allow_moving) begin
@@ -421,11 +468,6 @@ module datapath(
 				apple_inY <= (y_pointer >= appleY && y_pointer <= (appleY + 2));
 				apple = apple_inX && apple_inY;
 				
-				//Set apple's position
-//				if(good_collision)begin
-//						appleX <= rand_X;
-//						appleY <= rand_Y;
-//				end
 
 				//################################################################################################
 				//SPECIAL PROPS
@@ -481,14 +523,11 @@ module datapath(
 					negative_score_Y <= rand_props_Y;
 				end
 				
-				
 				//###############################################################################################
 				//CHECK COLLISION
 				//if is in lethal position
 				lethal = border_collision || snakeBody_collision || barrier;
-				
-				
-				
+
 				if(snakeHead && bonus_score) begin
 					bonus_score_X <= 0;
 					bonus_score_Y <= 0;
@@ -520,13 +559,15 @@ module datapath(
 					//update hiscore
 					if (score > hiscore)
 						hiscore = score;
-					if (size > 36) begin
-						next_level = 1;
-						current_level = current_level + 1;
-						up = 0;
-						down = 0;
-						left = 0;
-						right = 0;
+					if (current_level < 7) begin //At level 7 ? It will be endless! Snake will die eventually...
+						if (size > 6) begin 
+							next_level = 1;
+							current_level = current_level + 1;
+							up = 0;
+							down = 0;
+							left = 0;
+							right = 0;
+						end
 					end
 				end
 
@@ -549,22 +590,19 @@ module datapath(
 		end
 	end
 	
+	//remove white dots on top left corner
+	wire remove = (x_pointer >= 0 && x_pointer <= 2) && (y_pointer >= 0 && y_pointer <= 2);
 	
-	
-	
-	
-	// Display white: menu_text
-	// Display green: the snake's head and the snake's body
-	// Display red: the apple, or game over
-	// Display blue: the border
-		assign R = ((ingame && apple)
+	//display colours
+		assign R = (((ingame && apple)
 		|| (inmenu && menu_text))
 		|| (inresult && result_text)
 		|| (ingame && toxic)
 		|| (ingame && negative_score)
 		|| (inlevelDisplay && level_text)
-		|| (inLogoDisplay && logo_text);
-		assign G = ((ingame && snakeHead) 
+		|| (inLogoDisplay && logo_text)
+		|| (inLevelChooser && chooser_text)) && (!remove);
+		assign G = (((ingame && snakeHead) 
 		|| (ingame && snakeBody)) 
 		|| (inmenu && menu_text) 
 		|| (ingame && game_text) 
@@ -572,8 +610,9 @@ module datapath(
 		|| (ingame && bonus_score)  
 		|| (ingame && negative_score)
 		|| (inlevelDisplay && level_text)
-		|| (inLogoDisplay && logo_text);
-		assign B = (ingame && border) 
+		|| (inLogoDisplay && logo_text)
+		|| (inLevelChooser && chooser_text)) && (!remove);
+		assign B = ((ingame && border) 
 		|| (inmenu && menu_text) 
 		|| (inresult && result_text) 
 		|| (ingame && toxic) 
@@ -581,7 +620,8 @@ module datapath(
 		|| (ingame && negative_score)
 		|| (inlevelDisplay && level_text)
 		|| (ingame && barrier)
-		|| (inLogoDisplay && logo_text);
+		|| (inLogoDisplay && logo_text)
+		|| (inLevelChooser && chooser_text)) && (!remove);
 		assign RGB = {R, G, B};
 endmodule
 
@@ -670,28 +710,35 @@ module random_choice(clk, maximum, choice);
 endmodule
 
 
-
-
-module kbInput(clk, initial_game, PS2_CLK,direction,data,reset_n, number, direction_touched, any_touched);
+module kbInput(clk, initial_game, PS2_CLK,direction,data,reset_n, number, direction_touched, any_touched, release_up, release_down, enter);
 	input PS2_CLK, data, clk, initial_game;
 	output reg [4:0] direction;
 	output reg [4:0] number;
 	output reg reset_n = 0;
 	output reg direction_touched;
 	output reg any_touched;
+	output reg release_up, release_down, enter;
 	reg [7:0] press_code;
 	reg [7:0] release_code;
+	reg [7:0] previous_release_code;
 	reg [10:0]keyCode, previousCode;
 	reg recordNext = 0;
+	reg enable_move;
+	reg direction_activated;
+	reg [31:0] allow_next_touch_counter;
 	integer count = 0;
-
+	
+	
 	always@(posedge PS2_CLK)
 	begin
 	   any_touched = 0;
 		keyCode[count] = data;
-		count = count + 1;			
+		count = count + 1;
 		if(count == 11)
 		begin
+		   if(previousCode != 0)begin
+				release_code = 0;
+			end
 			if(previousCode != 8'hF0)begin
 				press_code = keyCode[8:1];
 			end
@@ -700,6 +747,7 @@ module kbInput(clk, initial_game, PS2_CLK,direction,data,reset_n, number, direct
 			   any_touched = 1;
 			   release_code = keyCode[8:1];
 			end
+			
 
 			previousCode = keyCode[8:1];
 			count = 0;
@@ -708,6 +756,8 @@ module kbInput(clk, initial_game, PS2_CLK,direction,data,reset_n, number, direct
 	
 	always@(posedge clk)
 	begin
+	
+	
 		direction_touched = 0;
 		if(press_code == 8'h75)begin
 			direction = 5'b00010;
@@ -729,27 +779,69 @@ module kbInput(clk, initial_game, PS2_CLK,direction,data,reset_n, number, direct
 			direction = direction;
 			direction_touched = 0;
 		end
-		
-		
 		if(initial_game)
 			direction = 5'd0;
 	end
+	
+	//register for move_enable
+//	always@(posedge clk)begin
+//		if (release_code != 0 && enable_move == 1'b0 && !direction_activated)begin
+//			enable_move = 1'b1;
+//			direction_activated = 1'b1;
+//		end
+//		else if (release_code != 0 && enable_move == 1'b1 && direction_activated)
+//			enable_move = 1'b0;
+//		else begin
+//			enable_move = 1'b0;
+//			direction_activated = 1'b0;
+//		end
+//	end
+//// no need for move_enable any more...
 	
 	always@(posedge clk)
 	begin
 		number = 5'b00000;
 		reset_n = 1'b0;
-		if(release_code == 8'h16)
+		release_up = 1'b0;
+		release_down = 1'b0;
+		enter = 1'b0;
+		
+		if(previousCode == 8'hF0) begin
+			previous_release_code = 0;
+		end
+			 
+		
+		if(release_code == 8'h16) begin
 			number = 5'b00010;
-		else if(release_code == 8'h1E)
+			previous_release_code = 8'h16;
+		end
+		else if(release_code == 8'h1E) begin
 			number = 5'b00100;
-		else if(release_code == 8'h26)
+			previous_release_code = 8'h1E;
+		end 
+		else if(release_code == 8'h26) begin
 			number = 5'b01000;
-		else if(release_code == 8'h76)
+			previous_release_code = 8'h26;
+		end
+		else if(release_code == 8'h76) begin
 			reset_n = 1'b1;
-
+			previous_release_code = 8'h76;
+		end
+		else if(release_code == 8'h75 && previous_release_code != 8'h75)begin
+		   release_up = 1'b1;
+			previous_release_code = 8'h75;
+			
+		end
+	   else if(release_code == 8'h72 && previous_release_code != 8'h72)begin
+			release_down = 1'b1;
+			previous_release_code = 8'h72;
+		end
+	   else if(release_code == 8'h5A)begin
+			enter = 1'b1;
+			previous_release_code = 8'h5A;
+		end
+		
 	end
-	
 	
 endmodule
 
@@ -868,6 +960,8 @@ module Controller(
 	input game_over,
 	input any_touched,
 	input direction_touched,
+	input level_chosen,
+	output reg inLevelChooser,
 	output reg inmenu,
 	output reg ingame,
 	output reg inresult,
@@ -875,6 +969,7 @@ module Controller(
 	output reg inlevelDisplay,
 	output reg initial_game,
 	output reg initial_head,
+	output reg choose_initial_level,
 	output reg game_reset,
 	output reg continue_reset,
 	output reg allow_moving,
@@ -890,19 +985,20 @@ module Controller(
 //   wire direction_touched = (direction == 5'b00010
 //									||direction == 5'b00100
 //								   ||direction == 5'b01000
-//								   ||direction == 5'b10000) ; // detection of starting the snake.
-	
+//								   ||direction == 5'b10000) ; // detection of starting the snake
+
 	reg [3:0] current_state, next_state;
 	
    localparam GLOBAL_WAIT = 4'd0,
 				  LOGO = 4'd1,
 				  INIT = 4'd2,
 	           MENU = 4'd3,
-				  LEVEL_DISPLAY = 4'd4,
-				  GAME_INIT = 4'd5,
-				  GAME_WAIT = 4'd6,
-				  INGAME = 4'd7,
-				  GAME_OVER = 4'd8;
+				  LEVEL_CHOOSE = 4'd4,
+				  LEVEL_DISPLAY = 4'd5,
+				  GAME_INIT = 4'd6,
+				  GAME_WAIT = 4'd7,
+				  INGAME = 4'd8,
+				  GAME_OVER = 4'd9;
 
 	always@(*)
       begin: state_table 
@@ -910,11 +1006,11 @@ module Controller(
 					GLOBAL_WAIT: next_state = LOGO;
 					LOGO: next_state = (any_touched) ? INIT : LOGO;
 					INIT: next_state = MENU;
-					MENU: next_state = (number_touched) ? LEVEL_DISPLAY : MENU;
+					MENU: next_state = (number_touched) ? LEVEL_CHOOSE : MENU;
+					LEVEL_CHOOSE: next_state = (level_chosen) ? LEVEL_DISPLAY : LEVEL_CHOOSE;
 					LEVEL_DISPLAY: next_state = (finished_displaying_level) ? GAME_INIT : LEVEL_DISPLAY; 
 					GAME_INIT: next_state = GAME_WAIT;
 					GAME_WAIT: next_state = (direction_touched) ? INGAME : GAME_WAIT;
-//					INGAME: next_state = (game_over) ? GAME_OVER : INGAME;
 					INGAME: begin
 						if (next_level)
 							next_state = LEVEL_DISPLAY;
@@ -925,7 +1021,6 @@ module Controller(
 						else
 							next_state = INGAME; //MAINTAIN
 					end
-//					GAME_OVER: next_state = (reset_n) ? INIT : GAME_OVER;
 					GAME_OVER: begin
 						if (number_input == 5'b00010)
 							next_state = LEVEL_DISPLAY;
@@ -939,12 +1034,6 @@ module Controller(
       end 
 	
 	always@(posedge clk)begin
-//					case(selected_difficulty)
-//						3'b001: main_difficulty <= 2'd10;
-//						3'b010: main_difficulty <= 2'd3;
-//						3'b100: main_difficulty <= 2'd1;
-//						default: main_difficulty <= 2'd1;
-//					endcase
 		if (current_state == MENU) begin
 				if (number_input == 5'b00010)
 					main_difficulty <= 4'd4;
@@ -956,12 +1045,6 @@ module Controller(
 	end
 	
 	always@(posedge clk)begin
-//					case(selected_difficulty)
-//						3'b001: main_difficulty <= 2'd10;
-//						3'b010: main_difficulty <= 2'd3;
-//						3'b100: main_difficulty <= 2'd1;
-//						default: main_difficulty <= 2'd1;
-//					endcase
 		continue_reset = 0;
 		if (current_state == GAME_OVER) begin
 				if (number_input == 5'b00010)
@@ -970,7 +1053,6 @@ module Controller(
 	end
 		
 	always@(*) begin //enable_signals
-        // By default make all our signals 0
 		    inLogoDisplay = 1'b0;
 	       inmenu = 1'b0;
 	       ingame = 1'b0;
@@ -980,6 +1062,8 @@ module Controller(
 			 initial_game = 1'b0;
 			 initial_head = 1'b0;
 			 game_reset = 1'b0;
+			 inLevelChooser = 1'b0;
+			 choose_initial_level = 1'b0;
 		  case(current_state)
 				LOGO:begin
 						inLogoDisplay = 1'b1;
@@ -990,9 +1074,13 @@ module Controller(
 		      MENU:begin
 				      inmenu = 1'b1;
 					end
+				LEVEL_CHOOSE:begin
+						inLevelChooser = 1'b1;
+						choose_initial_level = 1'b1;
+				end
 				LEVEL_DISPLAY:begin
 						inlevelDisplay = 1'b1;
-					end
+				end
 				GAME_INIT:begin
 						initial_game = 1'b1;
 				end
@@ -1012,9 +1100,6 @@ module Controller(
 	
 	always@(posedge clk)
       begin
-//        if(!reset_n)
-//            current_state <= MENU;
-//        else
             current_state <= next_state;
       end 
 endmodule
