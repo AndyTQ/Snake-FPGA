@@ -6,7 +6,7 @@ This project is ongoing, and more features will be added!
 
 The top level module is snake_top_level.v
 Make sure all the verilog files in this folder are imported to the project.
----------------------------------------------------------------
+
 
 Press any LETTER key to enter the main menu, 
 then press 1, 2, or 3 to select difficulty.
