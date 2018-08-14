@@ -1,9 +1,9 @@
 # Super_Snake_on_DE1_SoC
 -------------------------------------------------------------
 AUTHOR: Wei Cong, Tianquan Di
+--------------------------------------------------------------
 The famous snake game on an Altera DE1-SoC board.
 This project is ongoing, and more features will be added!
---------------------------------------------------------------
 
 The top level module is snake_top_level.v
 Make sure all the verilog files in this folder are imported to the project!
