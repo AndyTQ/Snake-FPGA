@@ -18,3 +18,6 @@ then press 1, 2, or 3 to select difficulty.
 
 - If the game is over, you can either press esc to return to main menu or
 press 1 to restart at the current level.
+
+---------------------------------
+- Demo videos are coming soon...
