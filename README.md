@@ -7,7 +7,7 @@
 - This project is ongoing, and more features will be added!
 
 # Instructions
-- The top level module is snake_top_level.v
+- ** The top level module is snake_top_level.v **
 - Make sure all the verilog files in this folder are imported to the project.
 
 
